@@ -1,0 +1,41 @@
+﻿@using BFme.Models
+@{
+    ViewData["Title"] = "Lot Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Инвестиционная оценка</h1>
+</div>
+<div class="w-100">
+    <table class="table-bordered">
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>StartCost</td>
+            <td>ProjectedCost</td>
+            <td>MarketCost</td>
+            <td>AuctionDate</td>
+            <td>Description</td>
+            <td>Assessment</td>
+            <td>Assignment</td>
+            <td>Neighbors</td>
+            <td>ProjectedSale</td>
+        </tr>
+        @foreach (Lot lot in ViewBag.Lots)
+        {
+            <tr>
+                <td>@lot.Id</td>
+                <td>@lot.Name</td>
+                <td>@lot.StartCost</td>
+                <td>@lot.ProjectedCost</td>
+                <td>@lot.MarketCost</td>
+                <td>@lot.AuctionDate</td>
+                <td>@lot.Description</td>
+                <td>@lot.Assessment</td>
+                <td>@lot.Assignment</td>
+                <td>@lot.Neighbors</td>
+                <td>@lot.ProjectedSale</td>
+            </tr>
+        }
+    </table>
+</div>

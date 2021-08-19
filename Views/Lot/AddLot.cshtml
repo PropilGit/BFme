@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Lot Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Инвестиционная оценка</h1>
+</div>
+<div class="form-group w-100">
+    <form action="AddLot" method="post">
+        <p>
+            <text>Название объекта:</text><br>
+            <input class="w-50" type="text" name="Name" />
+        </p>
+        <p>
+            <text>Начальная стоимость на торгах:</text><br>
+            <input class="w-50" type="number" name="StartCost" />
+        </p>
+        <p>
+            <text>Прогнозируемая стоимость продажи:</text><br>
+            <input class="w-50" type="number" name="ProjectedCost" />
+        </p>
+        <p>
+            <text>Рыночная цена объекта:</text><br>
+            <input class="w-50" type="number" name="MarketCost" />
+        </p>
+        <p>
+            <text>Дата торгов:</text><br>
+            <input class="w-50" type="date" name="AuctionDate" />
+        </p>
+        <p>
+            <text>Набор документов:</text><br>
+            <input class="w-50" type="text" name="DocumentSetType" />
+        </p>
+        <p>
+            <text>Комментарий описания лота:</text><br>
+            <textarea class="w-50" name="Description"></textarea>
+        </p>
+        <p>
+            <text>Оценка рыночной стоимости:</text><br>
+            <textarea class="w-50" name="Assessment"></textarea>
+        </p>
+        <p>
+            <text>Назначение:</text><br>
+            <textarea class="w-50" name="Assignment"></textarea>
+        </p>
+        <p>
+            <text>Кто соседи, что расположено рядом:</text><br>
+            <textarea class="w-50" name="Neighbors"></textarea>
+        </p>
+        <p>
+            <text>Прогнозируемая продажа:</text><br>
+            <textarea class="w-50" name="ProjectedSale"></textarea>
+        </p>
+
+        <input type="submit" value="Отправить" />
+    </form>
+</div>
