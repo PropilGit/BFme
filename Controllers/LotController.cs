@@ -9,13 +9,52 @@ namespace BFme.Controllers
 {
     public class LotController : Controller
     {
+
+        TestList test;
+
+        public LotController(TestList test)
+        {
+            this.test = test;
+        }
+
+        public IActionResult Index()
+        {
+            ViewBag.Lots = test.Lots;
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AddLot()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddLotPost(Lot lot)
+        {
+            try
+            {
+                test.Lots.Add(lot);
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+    }
+    /*
+    public class LotController : Controller
+    {
+        
         private LotContext lotContext;
 
         public LotController(LotContext lotContext)
         {
             this.lotContext = lotContext;
         }
-
+        
 
         public IActionResult Index()
         {
@@ -34,19 +73,6 @@ namespace BFme.Controllers
         {
             try
             {
-                /*Lot lot = new Lot();
-                lot.Name = Request.Form["name"];
-                lot.StartCost = float.Parse(Request.Form["startCost"]);
-                lot.ProjectedCost = float.Parse(Request.Form["projectedCost"]);
-                lot.MarketCost = float.Parse(Request.Form["marketCost"]);
-                lot.AuctionDate = DateTime.Parse(Request.Form["auctionDate"]);
-                lot.DocumentSetType = Request.Form["documentSetType"];
-                lot.Description = Request.Form["description"];
-                lot.Assessment = Request.Form["assessment"];
-                lot.Assignment = Request.Form["assignment"];
-                lot.Neighbors = Request.Form["neighbors"];
-                lot.ProjectedSale = Request.Form["projectedSale"];*/
-
                 lotContext.Lots.Add(lot);
                 await lotContext.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -79,4 +105,5 @@ namespace BFme.Controllers
             
         }
     }
+    */
 }

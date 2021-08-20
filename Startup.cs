@@ -26,9 +26,13 @@ namespace BFme
         public void ConfigureServices(IServiceCollection services)
         {
             // получаем строку подключения из файла конфигурации
+
+            /*
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<LotContext>(options =>
                 options.UseSqlServer(connection));
+            */
+            services.AddSingleton<TestList>();
             services.AddControllersWithViews();
         }
 
