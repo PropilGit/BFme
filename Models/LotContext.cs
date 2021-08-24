@@ -8,6 +8,8 @@ namespace BFme.Models
 {
     public class LotContext : DbContext
     {
+        public string TableName = "Lots";
+
         public DbSet<Lot> Lots { get; set; }
         public LotContext(DbContextOptions<LotContext> options)
             : base(options)

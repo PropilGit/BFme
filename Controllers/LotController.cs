@@ -4,51 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using BFme.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BFme.Controllers
 {
-    /*
     public class LotController : Controller
     {
-
-        TestList test;
-
-        public LotController(TestList test)
-        {
-            this.test = test;
-        }
-
-        public IActionResult Index()
-        {
-            ViewBag.Lots = test.Lots;
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult AddLot()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult AddLotPost(Lot lot)
-        {
-            try
-            {
-                test.Lots.Add(lot);
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-        }
-    }
-    */
-    public class LotController : Controller
-    {
-        
+        int rowsPerPage = 5;
         private LotContext lotContext;
 
         public LotController(LotContext lotContext)
@@ -57,16 +19,26 @@ namespace BFme.Controllers
         }
         
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            ViewBag.Lots = lotContext.Lots;
+            if (page < 1) page = 1;
+
+            int minRow = rowsPerPage * (page - 1);
+            int maxRow = rowsPerPage * (page);
+
+            ViewBag.Lots = lotContext.Lots.FromSqlRaw(
+                "SELECT * " +
+                "FROM " + lotContext.TableName + " " +
+                "WHERE Id > " + minRow + " AND " + "Id <= " + maxRow
+                    ).ToList();
+
             return View("Index");
         }
 
         [HttpGet]
         public IActionResult AddLot()
         {
-            return View();
+            return View("AddLot");
         }
 
         [HttpPost]
@@ -82,26 +54,6 @@ namespace BFme.Controllers
             {
 
                 throw;
-            }
-            
-        }
-
-        [NonAction]
-        string ValidateString(string input)
-        {
-            if (string.IsNullOrEmpty(input)) return "";
-            return input;
-        }
-        float ValidateFloat(string input)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(input)) return 0;
-                return float.Parse(input);
-            }
-            catch (Exception)
-            {
-                return 0;
             }
             
         }

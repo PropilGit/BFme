@@ -24,13 +24,14 @@ namespace BFme
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddControllersWithViews();
+
+            // добавление бд
             string connection = Configuration.GetConnectionString("dbConnection");
             services.AddDbContext<LotContext>(options =>
                 options.UseMySql(connection));
 
-            services.AddSingleton<TestList>();
-            services.AddControllersWithViews();
+            // 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
