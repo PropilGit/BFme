@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BFme.Controllers
 {
+    /*
     public class LotController : Controller
     {
 
@@ -44,7 +45,7 @@ namespace BFme.Controllers
 
         }
     }
-    /*
+    */
     public class LotController : Controller
     {
         
@@ -105,5 +106,5 @@ namespace BFme.Controllers
             
         }
     }
-    */
+    
 }

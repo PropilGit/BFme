@@ -22,16 +22,13 @@ namespace BFme
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // получаем строку подключения из файла конфигурации
-
-            /*
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            
+            string connection = Configuration.GetConnectionString("dbConnection");
             services.AddDbContext<LotContext>(options =>
-                options.UseSqlServer(connection));
-            */
+                options.UseMySql(connection));
+
             services.AddSingleton<TestList>();
             services.AddControllersWithViews();
         }
