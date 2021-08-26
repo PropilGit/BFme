@@ -9,17 +9,17 @@
 <div class="w-100">
     <table class="table-bordered">
         <tr>
-            <td>Id</td>
-            <td>Name</td>
-            <td>StartCost</td>
-            <td>ProjectedCost</td>
-            <td>MarketCost</td>
-            <td>AuctionDate</td>
-            <td>Description</td>
-            <td>Assessment</td>
-            <td>Assignment</td>
-            <td>Neighbors</td>
-            <td>ProjectedSale</td>
+            <td>Номер</td>
+            <td>Название</td>
+            <td>Начальная цена</td>
+            <td>Прогнозируемая стоимость продажи</td>
+            <td>Рыночная цена</td>
+            <td>Дата торгов</td>
+            <td>Комментарий</td>
+            <td>Оценка</td>
+            <td>Назначение</td>
+            <td>Соседи</td>
+            <td>Прогнозируемая продажа</td>
         </tr>
         @foreach (Lot lot in ViewBag.Lots)
         {
@@ -38,5 +38,9 @@
             </tr>
         }
     </table>
-    <!--><button action="AddLot" method="post"><-->
+    <form action="" method="post">
+        <p>Страница @ViewBag.CurrentPage</p>
+        <button name="page" value="@(ViewBag.CurrentPage - 1)">Предыдушая страница</button>
+        <button name="page" value="@(ViewBag.CurrentPage + 1)">Следующая страница</button>
+    </form>
 </div>

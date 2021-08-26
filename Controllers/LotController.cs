@@ -18,7 +18,6 @@ namespace BFme.Controllers
             this.lotContext = lotContext;
         }
         
-
         public IActionResult Index(int page = 1)
         {
             if (page < 1) page = 1;
@@ -26,11 +25,8 @@ namespace BFme.Controllers
             int minRow = rowsPerPage * (page - 1);
             int maxRow = rowsPerPage * (page);
 
-            ViewBag.Lots = lotContext.Lots.FromSqlRaw(
-                "SELECT * " +
-                "FROM " + lotContext.TableName + " " +
-                "WHERE Id > " + minRow + " AND " + "Id <= " + maxRow
-                    ).ToList();
+            ViewBag.CurrentPage = page;
+            ViewBag.Lots = lotContext.Lots.Where(l => (l.Id > minRow) && (l.Id <= maxRow));
 
             return View("Index");
         }
