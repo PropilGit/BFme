@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Lot Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Инвестиционная оценка</h1>
+</div>
+<div class="form-group w-100">
+    <form action="AddLot" method="post">
+        <p>
+            <text>Название объекта:</text><br>
+            <input class="w-50" type="text" name="Name" />
+        </p>
+        <p>
+            <text>Описание:</text><br>
+            <input class="w-50" type="text" name="Information" />
+        </p>
+        <p>
+            <text>Ссылка на ЕФРСБ:</text><br>
+            <input class="w-50" type="text" name="LinkEFRSB" />
+        </p>
+        <p>
+            <text>Ссылка на ТП:</text><br>
+            <input class="w-50" type="text" name="LinkTradingPlatform" />
+        </p>
+        <p>
+            <text>Цена на торгах:</text><br>
+            <input class="w-50" type="number" name="AuctionPrice " />
+        </p>
+
+        <input type="submit" value="Отправить" />
+    </form>
+</div>

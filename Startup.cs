@@ -28,7 +28,7 @@ namespace BFme
 
             // добавление бд
             string connection = Configuration.GetConnectionString("dbConnection");
-            services.AddDbContext<LotContext>(options =>
+            services.AddDbContext<InvestContext>(options =>
                 options.UseMySql(connection));
 
             // 

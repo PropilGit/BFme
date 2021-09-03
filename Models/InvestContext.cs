@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace BFme.Models
 {
-    public class LotContext : DbContext
+    public class InvestContext : DbContext
     {
-        public string TableName = "Lots";
 
         public DbSet<Lot> Lots { get; set; }
-        public LotContext(DbContextOptions<LotContext> options)
+        public DbSet<InvestСoncept> InvestСoncepts { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public InvestContext(DbContextOptions<InvestContext> options)
             : base(options)
         {
             Database.EnsureCreated();
