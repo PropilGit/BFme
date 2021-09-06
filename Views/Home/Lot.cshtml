@@ -1,0 +1,53 @@
+﻿@using BFme.Models
+@{
+    ViewData["Title"] = "Карточка лота";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Карточка лота</h1>
+    <p class="alert-warning">@ViewBag.Message</p>
+</div>
+<div class="form-group w-100">
+    <p>
+        <text>Название объекта:</text><br>
+        <text>@ViewBag.SelectedLot.Name</text>
+    </p>
+    <p>
+        <text>Описание:</text><br>
+        <text>@ViewBag.SelectedLot.Information</text>
+    </p>
+    <p>
+        <a href="@ViewBag.SelectedLot.LinkEFRSB">Ссылка на ЕФРСБ</a>
+    </p>
+    <p>
+        <a href="@ViewBag.SelectedLot.LinkTradingPlatform">Ссылка на Торговую площадку</a>
+    </p>
+    <p>
+        <text>Цена на торгах:</text><br>
+        <text>@ViewBag.SelectedLot.AuctionPrice</text>
+    </p>
+    
+    <div>
+        @if (ViewBag.SelectedLot.InvestConcepts != null)
+        {
+            <table>
+                <tr>
+                    <td><b>Название</b></td>
+                    <td><b>Описание</b></td>
+                </tr>
+                @foreach (InvestСoncept ic in ViewBag.SelectedLot.InvestConcepts)
+                {
+                    <tr>
+                        <td>Инвест идея #@ic.Id</td>
+                        <td>@ic.Description()</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        @Html.ActionLink("Добавить Инвест Идею", "AddInvestConcept", "Home", null)
+    </div>
+
+
+    @Html.ActionLink("Редактировать", "EditLot", "Home", new { Id = ViewBag.SelectedLot.Id }, null)
+</div>

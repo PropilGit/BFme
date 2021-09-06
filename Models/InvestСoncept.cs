@@ -15,5 +15,11 @@ namespace BFme.Models
         public float SalePrice { get; private set; }
 
         public List<Expense> Expenses { get; private set; }
+
+        public string Description() 
+        {
+            return "Цена покупки, руб: " + PurchasePrice +
+                        "Цена продажи, руб " + SalePrice;
+        }
     }
 }

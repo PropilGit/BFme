@@ -1,12 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Lot Page";
+    ViewData["Title"] = "Добавление нового лота";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Инвестиционная оценка</h1>
+    <h1 class="display-4">Добавление нового лота</h1>
+    <p class="alert-warning">@ViewBag.Message</p>
 </div>
 <div class="form-group w-100">
-    <form action="AddLot" method="post">
+    <form asp-action="AddLot" asp-controller="Home" method="post">
         <p>
             <text>Название объекта:</text><br>
             <input class="w-50" type="text" name="Name" />
@@ -25,9 +26,9 @@
         </p>
         <p>
             <text>Цена на торгах:</text><br>
-            <input class="w-50" type="number" name="AuctionPrice " />
+            <input class="w-50" type="number" name="AuctionPrice" />
         </p>
 
-        <input type="submit" value="Отправить" />
+        <input type="submit" value="Создать" />
     </form>
 </div>

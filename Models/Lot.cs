@@ -22,6 +22,6 @@ namespace BFme.Models
         public string LinkDocuments { get; set; }
         public string LinkPhotos { get; set; }
 
-        public List<InvestСoncept> InvestConcepts;
+        public List<InvestСoncept> InvestConcepts { get; set; }
     }
 }

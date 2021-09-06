@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewData["Title"] = "InvestConcept";
+}
+
+<h1>InvestConcept</h1>
+
+<form action="EditInvestConcept" method="post">
+    <input class="w-50" type="hidden" name="Id" value="@ViewBag.SelectedInvestConcept.Id" />
+    <p>
+        <text>Срок реализации объекта, месяц:</text><br>
+        <input class="w-50" type="text" name="Name" value="@ViewBag.SelectedLot.Name" />
+    </p>
+    <p>
+        <text>Цена покупки, руб:</text><br>
+        <input class="w-50" type="text" name="Information" value="@ViewBag.SelectedLot.Information" />
+    </p>
+    <p>
+        <text>Цена продажи, руб:</text><br>
+        <input class="w-50" type="text" name="LinkEFRSB" value="@ViewBag.SelectedLot.LinkEFRSB" />
+    </p>
+    <p>
+        <text>Ссылка на ТП:</text><br>
+        <input class="w-50" type="text" name="LinkTradingPlatform" value="@ViewBag.SelectedLot.LinkTradingPlatform" />
+    </p>
+    <p>
+        <text>Цена на торгах:</text><br>
+        <input class="w-50" type="number" name="AuctionPrice" value="@ViewBag.SelectedLot.AuctionPrice" />
+    </p>
+</form>

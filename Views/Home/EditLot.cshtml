@@ -1,13 +1,14 @@
 ﻿@using BFme.Models
 @{
-    ViewData["Title"] = "Lot Page";
+    ViewData["Title"] = "Редактирование лота";
 }
 
 <div class="text-center">
     <h1 class="display-4">Редактирование лота</h1>
+    <p class="alert-warning">@ViewBag.Message</p>
 </div>
 <div class="form-group w-100">
-    <form action="EditLot" method="post">
+    <form asp-action="EditLot" asp-controller="Home" method="post">
         <input class="w-50" type="hidden" name="Id" value="@ViewBag.SelectedLot.Id" />
         <p>
             <text>Название объекта:</text><br>
@@ -30,6 +31,11 @@
             <input class="w-50" type="number" name="AuctionPrice" value="@ViewBag.SelectedLot.AuctionPrice" />
         </p>
 
-        <input type="submit" value="сохранить" />
+        <!--
+    <form asp-action="EditInvestConcept" asp-controller="Home" method="get">
+        <input type="submit" value="Добавить инвестиционную идею" />
+    </!--form>
+-->
+        <input type="submit" value="Cохранить" />
     </form>
 </div>

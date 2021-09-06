@@ -4,7 +4,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Инвестиционная оценка</h1>
+    <h1 class="display-4">Список лотов</h1>
+    <p class="alert-warning">@ViewBag.Message</p>
 </div>
 <div class="w-100">
     <table class="table-bordered">
@@ -18,14 +19,16 @@
         </tr>
         @foreach (Lot lot in ViewBag.Lots)
         {
-    <tr>
-        <td>@lot.Id</td>
-        <td>@lot.Name</td>
-        <td>@lot.Information</td>
-        <td><a href="@lot.LinkEFRSB">ЕФРСБ</a></td>
-        <td><a href="@lot.LinkTradingPlatform">ТП</a></td>
-        <td>@lot.AuctionPrice</td>
-    </tr>
+            <tr>
+                <td>@lot.Id</td>
+                <td>
+                    @Html.ActionLink(@lot.Name, "Lot", "Home", new { Id = lot.Id }, null)
+                </td>
+                <td>@lot.Information</td>
+                <td><a href="@lot.LinkEFRSB">ЕФРСБ</a></td>
+                <td><a href="@lot.LinkTradingPlatform">ТП</a></td>
+                <td>@lot.AuctionPrice</td>
+            </tr>
         }
     </table>
     <form action="" method="post">
