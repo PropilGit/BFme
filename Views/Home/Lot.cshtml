@@ -28,24 +28,31 @@
     </p>
     
     <div>
-        @if (ViewBag.SelectedLot.InvestConcepts != null)
-        {
-            <table>
+        <table class="table-bordered">
+            <tr>
+                <td><b>Название</b></td>
+                <td><b>Описание</b></td>
+                <td><b>Изменить</b></td>
+            </tr>
+            @foreach (InvestConcept ic in ViewBag.SelectedLot.InvestConcepts)
+            {
                 <tr>
-                    <td><b>Название</b></td>
-                    <td><b>Описание</b></td>
+                    <td>@Html.ActionLink(@ic.Name, "InvestConcept", "Home", new { Id = ic.Id }, null)</td>
+                    <td>
+                        Цена покупки, руб: @ic.PurchasePrice<br>
+                        Цена продажи, руб: @ic.SalePrice
+                    </td>
+                    <td>
+                        @Html.ActionLink("Редактировать", "EditInvestConcept", "Home", new { Id = ic.Id }, null)
+                    </td>
                 </tr>
-                @foreach (InvestСoncept ic in ViewBag.SelectedLot.InvestConcepts)
-                {
-                    <tr>
-                        <td>Инвест идея #@ic.Id</td>
-                        <td>@ic.Description()</td>
-                    </tr>
-                }
-            </table>
-        }
-
-        @Html.ActionLink("Добавить Инвест Идею", "AddInvestConcept", "Home", null)
+            }
+            <tr>
+                <td colspan="3">
+                    @Html.ActionLink("Добавить инвест идею", "AddInvestConcept", "Home", new { lotId = ViewBag.SelectedLot.Id }, null)
+                </td>
+            </tr>
+        </table>
     </div>
 
 

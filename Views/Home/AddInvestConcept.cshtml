@@ -1,16 +1,16 @@
 ﻿@using BFme.Models
 @{
-    ViewData["Title"] = "Редактирование инвестиционной идеи";
+    ViewData["Title"] = "Добавление инвестиционной идеи";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Редактирование инвестиционной идеи</h1>
+    <h1 class="display-4">Добавление инвестиционной идеи</h1>
     <p class="alert-warning">@ViewBag.Message</p>
 </div>
 
-<form asp-action="EditInvestConcept" asp-controller="Home" method="post">
-    <input type="hidden" name="Id" value="@ViewBag.SelectedInvestConcept.Id" />
-    <input type="hidden" name="LotId" value="@ViewBag.SelectedInvestConcept.LotId" />
+<form asp-action="AddInvestConcept" asp-controller="Home" method="post">
+    <input type="hidden" name="Id" value="0" />
+    <input type="hidden" name="LotId" value=@ViewBag.LotId />
     <p>
         <text>Название:</text><br>
         <input class="w-50" type="text" name="Name" value="@ViewBag.SelectedInvestConcept.Name" />
@@ -28,5 +28,5 @@
         <input class="w-50" type="text" name="SalePrice" value="@ViewBag.SelectedInvestConcept.SalePrice" />
     </p>
 
-    <input type="submit" value="Cохранить" />
+    <input type="submit" value="Cоздать" />
 </form>

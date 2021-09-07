@@ -13,5 +13,7 @@ namespace BFme.Models
         public string Name { get; set; }
         public float SinglePayment { get; set; }
         public float MonthlyPayment { get; set; }
+
+        public int InvestСonceptId { get; set; }
     }
 }

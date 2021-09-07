@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BFme.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BFme.Controllers
 {
@@ -42,9 +43,13 @@ namespace BFme.Controllers
         public IActionResult Lot(int Id)
         {
             Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
-            if(lot == null)
+            if (lot == null)
             {
-                ViewBag.Message = "Не найдено лота с индексом " + Id;
+                 return AddLot("Не найдено лота с индексом " + Id);
+            }
+            else
+            {
+                lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
             }
 
             ViewBag.SelectedLot = lot;
@@ -52,8 +57,10 @@ namespace BFme.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddLot()
+        public IActionResult AddLot(string message = "")
         {
+            ViewBag.Message = message;
+            ViewBag.SelectedLot = new Lot();
             return View("AddLot");
         }
 
@@ -114,87 +121,196 @@ namespace BFme.Controllers
 
         #endregion
 
-        #region InvestСoncept
+        #region InvestConcept
 
         [HttpGet]
-        public IActionResult InvestСoncept(int Id)
+        public IActionResult InvestConcept(int Id, string message = "")
         {
-            InvestСoncept ic = db.InvestСoncepts.SingleOrDefault(l => l.Id == Id);
+            ViewBag.Message = message;
+
+            InvestConcept ic = db.InvestConcepts.SingleOrDefault(l => l.Id == Id);
             if (ic == null)
             {
-                ViewBag.Message = "Не найдено инвест идеи с индексом " + Id;
+                return Index(1, "Не найдено инвест идеи с индексом " + Id);
             }
 
-            ViewBag.SelectedInvestСoncept = ic;
-            return View("InvestСoncept");
+            ViewBag.SelectedInvestConcept = ic;
+            return View("InvestConcept");
         }
 
         [HttpGet]
-        public IActionResult AddInvestСoncept()
+        public IActionResult AddInvestConcept(int LotId, string message = "")
         {
-            return View("AddInvestСoncept");
+            ViewBag.Message = message;
+            ViewBag.SelectedInvestConcept = new InvestConcept();
+            ViewBag.LotId = LotId;
+            return View("AddInvestConcept");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddInvestСoncept(InvestСoncept ic)
+        public async Task<IActionResult> AddInvestConcept(InvestConcept ic, int LotId)
         {
             try
             {
-                InvestСoncept dbic = db.InvestСoncepts.SingleOrDefault(l => l.Id == ic.Id);
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(i => i.Id == ic.Id);
                 if (dbic != null)
                 {
-                    ViewBag.Message = "Данная инвест идея уже существует";
+                    ViewBag.Message = "Попытка добавить уже существующую инвест идею";
+                    return EditInvestConcept(ic.Id);
                 }
-                else
+
+                Lot dblot = db.Lots.SingleOrDefault(l => l.Id == LotId);
+                if (dblot == null)
                 {
-                    ic.Id = db.InvestСoncepts.Count() + 1;
-                    db.InvestСoncepts.Add(ic);
-                    await db.SaveChangesAsync();
+                    return Index(1, "Попытка добавить инвест идею в несуществующий лот");
                 }
+
+                ic.Id = db.InvestConcepts.Count() + 1;
+                db.InvestConcepts.Add(ic);
+                //await db.SaveChangesAsync();
+
+                //dblot.InvestConcepts.Add(ic);
+                //db.Lots.Update(dblot);
+                await db.SaveChangesAsync();
+
+                return InvestConcept(ic.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                return Index(1, "Непредвиденная ошибка");
             }
-            return InvestСoncept(ic.Id);
         }
 
         [HttpGet]
-        public IActionResult EditInvestСoncept(int Id)
+        public IActionResult EditInvestConcept(int Id)
         {
 
-            InvestСoncept ic = db.InvestСoncepts.SingleOrDefault(l => l.Id == Id);
+            InvestConcept ic = db.InvestConcepts.SingleOrDefault(l => l.Id == Id);
             if (ic == null)
             {
                 ViewBag.Message = "Не удалось найти данyю инвест идею в БД";
             }
 
-            ViewBag.SelectedInvestСoncept = ic;
-            return View("EditInvestСoncept");
+            ViewBag.SelectedInvestConcept = ic;
+            return View("EditInvestConcept");
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditInvestСoncept(InvestСoncept ic)
+        public async Task<IActionResult> EditInvestConcept(InvestConcept ic)
         {
             try
             {
-                db.InvestСoncepts.Update(ic);
+                db.InvestConcepts.Update(ic);
                 await db.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ViewBag.SelectedInvestСoncept = "Не удалось отредактировать данную инвест идею";
+                ViewBag.SelectedInvestConcept = "Не удалось отредактировать данную инвест идею";
             }
 
-            return InvestСoncept(ic.Id);
+            return InvestConcept(ic.Id);
         }
 
-        #endregion 
+        #endregion
 
+        #region Expense
+
+        [HttpGet]
+        public IActionResult Expense(int Id)
+        {
+            Expense exp = db.Expenses.SingleOrDefault(l => l.Id == Id);
+            if (exp == null)
+            {
+                return Index(1, "Не найдено расхода с индексом " + Id);
+            }
+            else
+            {
+                ViewBag.SelectedExpense = exp;
+                return View("Expense");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddExpense(int InvestConceptId, string message = "")
+        {
+            ViewBag.Message = message;
+            ViewBag.SelectedExpense = new Expense();
+            ViewBag.InvestConceptId = InvestConceptId;
+
+            ViewBag.IsAdding = true;
+            return View("EditExpense");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddExpense(Expense exp, int InvestConceptId)
+        {
+            try
+            {
+                InvestConcept dbexp = db.InvestConcepts.SingleOrDefault(i => i.Id == exp.Id);
+                if (dbexp != null)
+                {
+                    ViewBag.Message = "Попытка добавить уже существующую инвест идею";
+                    return EditExpense(exp.Id);
+                }
+
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(l => l.Id == InvestConceptId);
+                if (dbic == null)
+                {
+                    return Index(1, "Попытка добавить расход в несуществующую инвест идею");
+                }
+
+                exp.Id = db.Expenses.Count() + 1;
+                db.Expenses.Add(exp);
+                await db.SaveChangesAsync();
+
+                return Expense(exp.Id);
+            }
+            catch (Exception ex)
+            {
+                return InvestConcept(InvestConceptId, "Не удалось добавить расход");
+            }
+        }
+
+        [HttpGet]
+        public IActionResult EditExpense(int Id)
+        {
+
+            Expense exp = db.Expenses.SingleOrDefault(l => l.Id == Id);
+            if (exp == null)
+            {
+                return Index(1, "Не удалось найти расход с индексом "+Id+" в БД");
+            }
+            else
+            {
+                ViewBag.SelectedExpense = exp;
+                return View("EditExpense");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditExpense(Expense exp)
+        {
+            try
+            {
+                db.Expenses.Update(exp);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SelectedExpense = "Не удалось отредактировать данный расход";
+            }
+
+            return Expense(exp.Id);
+
+        }
+        #endregion
+
+        #region Error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
     }
 }

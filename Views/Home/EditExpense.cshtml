@@ -1,0 +1,31 @@
+﻿@using BFme.Models
+@{
+    ViewData["Title"] = "Редактирование расхода";
+    if (ViewBag.IsAdding) ViewBag.Action = "AddExpense";
+    else ViewBag.Action = "EditExpense";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Редактирование расхода</h1>
+    <p class="alert-warning">@ViewBag.Message</p>
+</div>
+
+<form asp-action=@ViewBag.Action asp-controller="Home" method="post">
+
+    <input type="hidden" name="Id" value="@ViewBag.SelectedExpense.Id" />
+    <input type="hidden" name="InvestСonceptId" value="@ViewBag.SelectedExpense.InvestСonceptId" />
+    <p>
+        <text>Название:</text><br>
+        <input class="w-50" type="text" name="Name" value="@ViewBag.SelectedExpense.Name" />
+    </p>
+    <p>
+        <text>Разово:</text><br>
+        <input class="w-50" type="text" name="SinglePayment" value="@ViewBag.SelectedExpense.SinglePayment" />
+    </p>
+    <p>
+        <text>Ежемесячно:</text><br>
+        <input class="w-50" type="text" name="MonthlyPayment" value="@ViewBag.SelectedExpense.MonthlyPayment" />
+    </p>
+
+    <input type="submit" value="Cохранить" />
+</form>
