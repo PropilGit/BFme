@@ -10,10 +10,10 @@
     <p class="alert-warning">@ViewBag.Message</p>
 </div>
 
-<form asp-action=@ViewBag.Action asp-controller="Home" method="post">
-
+<form asp-action="@ViewBag.Action" asp-controller="Home" method="post">
+    <input type="hidden" name="Id" value="@ViewBag.Action" />
     <input type="hidden" name="Id" value="@ViewBag.SelectedExpense.Id" />
-    <input type="hidden" name="InvestСonceptId" value="@ViewBag.SelectedExpense.InvestСonceptId" />
+    <input type="hidden" name="InvestConceptId" value="@ViewBag.InvestConceptId" />
     <p>
         <text>Название:</text><br>
         <input class="w-50" type="text" name="Name" value="@ViewBag.SelectedExpense.Name" />

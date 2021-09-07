@@ -44,7 +44,7 @@
             }
             <tr>
                 <td colspan="4">
-                    @Html.ActionLink("Добавить расход", "AddExpense", "Home", null)
+                    @Html.ActionLink("Добавить расход", "AddExpense", "Home", new { InvestConceptId = ViewBag.SelectedInvestConcept.Id }, null)
                 </td>
             </tr>
         </table>

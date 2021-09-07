@@ -47,11 +47,8 @@ namespace BFme.Controllers
             {
                  return AddLot("Не найдено лота с индексом " + Id);
             }
-            else
-            {
-                lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
-            }
 
+            lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
             ViewBag.SelectedLot = lot;
             return View("Lot");
         }
@@ -128,12 +125,12 @@ namespace BFme.Controllers
         {
             ViewBag.Message = message;
 
-            InvestConcept ic = db.InvestConcepts.SingleOrDefault(l => l.Id == Id);
+            InvestConcept ic = db.InvestConcepts.SingleOrDefault(i => i.Id == Id);
             if (ic == null)
             {
                 return Index(1, "Не найдено инвест идеи с индексом " + Id);
             }
-
+            ic.Expenses = db.Expenses.Where(i => i.InvestConceptId == Id).ToList();
             ViewBag.SelectedInvestConcept = ic;
             return View("InvestConcept");
         }
@@ -242,7 +239,7 @@ namespace BFme.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddExpense(Expense exp, int InvestConceptId)
+        public async Task<IActionResult> AddExpense(Expense exp)
         {
             try
             {
@@ -253,7 +250,7 @@ namespace BFme.Controllers
                     return EditExpense(exp.Id);
                 }
 
-                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(l => l.Id == InvestConceptId);
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(l => l.Id == exp.InvestConceptId);
                 if (dbic == null)
                 {
                     return Index(1, "Попытка добавить расход в несуществующую инвест идею");
@@ -267,7 +264,7 @@ namespace BFme.Controllers
             }
             catch (Exception ex)
             {
-                return InvestConcept(InvestConceptId, "Не удалось добавить расход");
+                return InvestConcept(exp.InvestConceptId, "Не удалось добавить расход");
             }
         }
 
