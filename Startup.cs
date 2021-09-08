@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BFme.Infrastructure;
 using BFme.Models;
+using BFme.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +17,8 @@ namespace BFme
 {
     public class Startup
     {
+        Access access;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,16 +30,22 @@ namespace BFme
         {
             services.AddControllersWithViews();
 
-            // добавление бд
-            string connection = Configuration.GetConnectionString("dbConnection");
-            services.AddDbContext<InvestContext>(options =>
-                options.UseMySql(connection));
+            // Access
+            access = JSONConverter.OpenJSONFile<Access>(Environment.CurrentDirectory + "\\_access\\access.json");
 
-            // 
+            // БД
+            string dbConnection = "Server=" + access.Server + "; Database=" + access.Login + ";user=" + access.Login + ";password=" + access.Password + ";";
+            services.AddDbContext<InvestContext>(options => options.UseMySql(dbConnection));
+
+            // FTP
+            services.AddSingleton<IFileController, FtpController>();
+
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IFileController ftp)
         {
+            ftp.Configure(access);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

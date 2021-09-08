@@ -27,6 +27,36 @@
         <text>@ViewBag.SelectedLot.AuctionPrice</text>
     </p>
     
+    
+    <div class="border-dark">
+        <h5>Файлы:</h5>
+        <table class="table-bordered">
+            @foreach (var file in ViewBag.SelectedLot.Files)
+            {
+                <tr>
+                    <td>@file.Name</td>
+                    <td>
+                        @using (Html.BeginForm("Download", "Home", FormMethod.Post))
+                        {
+                            <input type="hidden" , name="Id", value="@file.Id" />
+                            <input type="submit" value="Скачать" />
+                        }
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2">
+                    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="hidden", name="LotId", value="@ViewBag.SelectedLot.Id" />
+                        <input type="file" name="file" />   <input type="submit" value="Загрузить файл" />
+                    }
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
     <div>
         <table class="table-bordered">
             <tr>

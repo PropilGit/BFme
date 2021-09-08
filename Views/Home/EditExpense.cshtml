@@ -1,19 +1,19 @@
 ﻿@using BFme.Models
 @{
-    ViewData["Title"] = "Редактирование расхода";
-    if (ViewBag.IsAdding) ViewBag.Action = "AddExpense";
-    else ViewBag.Action = "EditExpense";
+    if(ViewBag.Action == "AddExpense") ViewData["Title"] = "Добавление расхода";
+    else if(ViewBag.Action == "EditExpense") ViewData["Title"] = "Редактирование расхода";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Редактирование расхода</h1>
+    <h1 class="display-4">
+         Редактирование расхода
+    </h1>
     <p class="alert-warning">@ViewBag.Message</p>
 </div>
 
 <form asp-action="@ViewBag.Action" asp-controller="Home" method="post">
-    <input type="hidden" name="Id" value="@ViewBag.Action" />
     <input type="hidden" name="Id" value="@ViewBag.SelectedExpense.Id" />
-    <input type="hidden" name="InvestConceptId" value="@ViewBag.InvestConceptId" />
+    <input type="hidden" name="InvestConceptId" value="@ViewBag.SelectedExpense.InvestConceptId" />
     <p>
         <text>Название:</text><br>
         <input class="w-50" type="text" name="Name" value="@ViewBag.SelectedExpense.Name" />

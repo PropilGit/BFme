@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,19 +8,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BFme.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using BFme.Services;
+using System.IO;
 
 namespace BFme.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
         int rowsPerPage = 10;
         private InvestContext db;
+        private IFileController ftp;
 
-        public HomeController(ILogger<HomeController> logger, InvestContext investContext)
+        public HomeController(ILogger<HomeController> logger, InvestContext investContext, IFileController ftp)
         {
+
             _logger = logger;
             this.db = investContext;
+            this.ftp = ftp;
         }
 
         public IActionResult Index(int page = 1, string message = "")
@@ -40,8 +48,9 @@ namespace BFme.Controllers
         #region Lot
 
         [HttpGet]
-        public IActionResult Lot(int Id)
+        public IActionResult Lot(int Id, string message = "")
         {
+            ViewBag.Message = message;
             Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
             if (lot == null)
             {
@@ -49,9 +58,12 @@ namespace BFme.Controllers
             }
 
             lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
+            lot.Files = db.Files.Where(c => c.LotId == Id).ToList();
             ViewBag.SelectedLot = lot;
             return View("Lot");
         }
+
+        #region Add
 
         [HttpGet]
         public IActionResult AddLot(string message = "")
@@ -86,6 +98,10 @@ namespace BFme.Controllers
             return Lot(lot.Id);
         }
 
+        #endregion
+
+        #region Edit
+
         [HttpGet]
         public IActionResult EditLot(int Id)
         {
@@ -115,6 +131,8 @@ namespace BFme.Controllers
 
             return Lot(lot.Id);
         }
+
+        #endregion
 
         #endregion
 
@@ -234,7 +252,7 @@ namespace BFme.Controllers
             ViewBag.SelectedExpense = new Expense();
             ViewBag.InvestConceptId = InvestConceptId;
 
-            ViewBag.IsAdding = true;
+            ViewBag.Action = "AddExpense";
             return View("EditExpense");
         }
 
@@ -247,6 +265,7 @@ namespace BFme.Controllers
                 if (dbexp != null)
                 {
                     ViewBag.Message = "Попытка добавить уже существующую инвест идею";
+                    ViewBag.Action = "EditExpense";
                     return EditExpense(exp.Id);
                 }
 
@@ -271,15 +290,15 @@ namespace BFme.Controllers
         [HttpGet]
         public IActionResult EditExpense(int Id)
         {
-
             Expense exp = db.Expenses.SingleOrDefault(l => l.Id == Id);
             if (exp == null)
             {
-                return Index(1, "Не удалось найти расход с индексом "+Id+" в БД");
+                return Index(1, "Не удалось найти расход с индексом " + Id + " в БД");
             }
             else
             {
                 ViewBag.SelectedExpense = exp;
+                ViewBag.Action = "EditExpense";
                 return View("EditExpense");
             }
         }
@@ -300,6 +319,61 @@ namespace BFme.Controllers
             return Expense(exp.Id);
 
         }
+        #endregion
+
+        #region Files
+
+        [HttpPost]
+        public IActionResult Download(int Id)
+        {
+            LotFile dblf = db.Files.SingleOrDefault(i => i.Id == Id);
+            if (dblf == null) return Index(1, "Файл не найден");
+
+            byte[] bytes = ftp.Download(Id.ToString());
+            return new FileContentResult(bytes, "application/txt")
+            {
+                FileDownloadName = dblf.Name
+            };
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file, int LotId)
+        {
+            try
+            {
+                if (file == null) return Lot(LotId, "Попытка добавить файл в несуществующий лот");
+
+                Lot dblot = db.Lots.SingleOrDefault(i => i.Id == LotId);
+                if(dblot == null) return Index(1, "Попытка добавить файл в несуществующий лот");
+
+                //-------
+                MemoryStream mStream = new MemoryStream();
+                file.OpenReadStream().CopyTo(mStream);
+
+                int Id = db.Files.Count() + 1;
+                if (ftp.Upload(Id.ToString(), mStream.ToArray()))
+                {
+                    LotFile lf = new LotFile();
+                    lf.Id = Id;
+                    lf.Name = file.FileName;
+                    lf.LotId = LotId;
+
+                    db.Files.Add(lf);
+                    await db.SaveChangesAsync();
+
+                    return Lot(LotId, "Файл успешно загружен");
+                }
+                else
+                {
+                    return Lot(LotId, "Ошибка загрузки файла");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Lot(LotId, "Непредвиденная ошибка");
+            }  
+        }
+
         #endregion
 
         #region Error

@@ -36,4 +36,14 @@
         <button name="page" value="@(ViewBag.CurrentPage - 1)">Предыдушая страница</button>
         <button name="page" value="@(ViewBag.CurrentPage + 1)">Следующая страница</button>
     </form>
+
+    @using (Html.BeginForm("Download", "Home", FormMethod.Post))
+    {
+        <input type="submit" value="Скачать" />
+    }
+    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <input type="file" name="file" /><br>
+        <input type="submit" value="Загрузить" />
+    }
 </div>
