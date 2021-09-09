@@ -10,9 +10,7 @@ namespace BFme.Services
 {
     public class FtpController : IFileController
     {
-
         private Access access;
-
         public bool Configure(Access access)
         {
             try
@@ -51,7 +49,6 @@ namespace BFme.Services
                 return false;
             }
         }
-
         public byte[] Download(string name)
         {
             try

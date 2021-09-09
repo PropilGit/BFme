@@ -36,6 +36,8 @@ namespace BFme
             // ад
             string dbConnection = "Server=" + access.Server + "; Database=" + access.Login + ";user=" + access.Login + ";password=" + access.Password + ";";
             services.AddDbContext<InvestContext>(options => options.UseMySql(dbConnection));
+            //services.AddSingleton<IDbController, DbController>();
+            
 
             // FTP
             services.AddSingleton<IFileController, FtpController>();

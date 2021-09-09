@@ -30,202 +30,29 @@ namespace BFme.Controllers
             this.ftp = ftp;
         }
 
-        public IActionResult Index(int page = 1, string message = "")
+        public IActionResult Index(int Page = 1, string Message = "")
         {
-            ViewBag.Message = message;
+            ViewBag.Message = Message;
 
-            if (page < 1) page = 1;
+            if (Page < 1) Page = 1;
 
-            int minRow = rowsPerPage * (page - 1);
-            int maxRow = rowsPerPage * (page);
+            int minRow = rowsPerPage * (Page - 1);
+            int maxRow = rowsPerPage * (Page);
 
-            ViewBag.CurrentPage = page;
+            ViewBag.CurrentPage = Page;
             ViewBag.Lots = db.Lots.Where(l => (l.Id > minRow) && (l.Id <= maxRow));
 
             return View("Index");
         }
-
-        #region Lot
-
-        [HttpGet]
-        public IActionResult Lot(int Id, string message = "")
+        public IActionResult Error(string Message = "")
         {
-            ViewBag.Message = message;
-            Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
-            if (lot == null)
-            {
-                 return AddLot("Не найдено лота с индексом " + Id);
-            }
-
-            lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
-            lot.Files = db.Files.Where(c => c.LotId == Id).ToList();
-            ViewBag.SelectedLot = lot;
-            return View("Lot");
+            ViewBag.Message = Message;
+            return View();
         }
-
-        #region Add
-
-        [HttpGet]
-        public IActionResult AddLot(string message = "")
-        {
-            ViewBag.Message = message;
-            ViewBag.SelectedLot = new Lot();
-            return View("AddLot");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddLot(Lot lot)
-        {
-            try
-            {
-                Lot dbLot = db.Lots.SingleOrDefault(l => l.Id == lot.Id);
-                if (dbLot != null)
-                {
-                    ViewBag.Message = "Данный лот уже существует";
-                }
-                else
-                {
-                    lot.Id = db.Lots.Count() + 1;
-                    db.Lots.Add(lot);
-                    await db.SaveChangesAsync();
-                }
-            }
-            catch (Exception)
-            {
-                ViewBag.Message = "Не удалось лобавить лот";
-            }
-
-            return Lot(lot.Id);
-        }
-
-        #endregion
-
-        #region Edit
-
-        [HttpGet]
-        public IActionResult EditLot(int Id)
-        {
-
-            Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
-            if (lot == null)
-            {
-                ViewBag.Message = "Не удалось найти данный лот в БД";
-            }
-
-            ViewBag.SelectedLot = lot;
-            return View("EditLot");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditLot(Lot lot)
-        {
-            try
-            {
-                db.Lots.Update(lot);
-                await db.SaveChangesAsync();  
-            }
-            catch (Exception)
-            {
-                ViewBag.Message = "Не удалось отредактировать данный лот";
-            }
-
-            return Lot(lot.Id);
-        }
-
-        #endregion
-
-        #endregion
 
         #region InvestConcept
 
-        [HttpGet]
-        public IActionResult InvestConcept(int Id, string message = "")
-        {
-            ViewBag.Message = message;
-
-            InvestConcept ic = db.InvestConcepts.SingleOrDefault(i => i.Id == Id);
-            if (ic == null)
-            {
-                return Index(1, "Не найдено инвест идеи с индексом " + Id);
-            }
-            ic.Expenses = db.Expenses.Where(i => i.InvestConceptId == Id).ToList();
-            ViewBag.SelectedInvestConcept = ic;
-            return View("InvestConcept");
-        }
-
-        [HttpGet]
-        public IActionResult AddInvestConcept(int LotId, string message = "")
-        {
-            ViewBag.Message = message;
-            ViewBag.SelectedInvestConcept = new InvestConcept();
-            ViewBag.LotId = LotId;
-            return View("AddInvestConcept");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddInvestConcept(InvestConcept ic, int LotId)
-        {
-            try
-            {
-                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(i => i.Id == ic.Id);
-                if (dbic != null)
-                {
-                    ViewBag.Message = "Попытка добавить уже существующую инвест идею";
-                    return EditInvestConcept(ic.Id);
-                }
-
-                Lot dblot = db.Lots.SingleOrDefault(l => l.Id == LotId);
-                if (dblot == null)
-                {
-                    return Index(1, "Попытка добавить инвест идею в несуществующий лот");
-                }
-
-                ic.Id = db.InvestConcepts.Count() + 1;
-                db.InvestConcepts.Add(ic);
-                //await db.SaveChangesAsync();
-
-                //dblot.InvestConcepts.Add(ic);
-                //db.Lots.Update(dblot);
-                await db.SaveChangesAsync();
-
-                return InvestConcept(ic.Id);
-            }
-            catch (Exception ex)
-            {
-                return Index(1, "Непредвиденная ошибка");
-            }
-        }
-
-        [HttpGet]
-        public IActionResult EditInvestConcept(int Id)
-        {
-
-            InvestConcept ic = db.InvestConcepts.SingleOrDefault(l => l.Id == Id);
-            if (ic == null)
-            {
-                ViewBag.Message = "Не удалось найти данyю инвест идею в БД";
-            }
-
-            ViewBag.SelectedInvestConcept = ic;
-            return View("EditInvestConcept");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> EditInvestConcept(InvestConcept ic)
-        {
-            try
-            {
-                db.InvestConcepts.Update(ic);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.SelectedInvestConcept = "Не удалось отредактировать данную инвест идею";
-            }
-
-            return InvestConcept(ic.Id);
-        }
-
+        
         #endregion
 
         #region Expense
@@ -249,8 +76,10 @@ namespace BFme.Controllers
         public IActionResult AddExpense(int InvestConceptId, string message = "")
         {
             ViewBag.Message = message;
-            ViewBag.SelectedExpense = new Expense();
-            ViewBag.InvestConceptId = InvestConceptId;
+
+            Expense exp = new Expense();
+            exp.InvestConceptId = InvestConceptId;
+            ViewBag.SelectedExpense = exp;
 
             ViewBag.Action = "AddExpense";
             return View("EditExpense");
@@ -283,7 +112,7 @@ namespace BFme.Controllers
             }
             catch (Exception ex)
             {
-                return InvestConcept(exp.InvestConceptId, "Не удалось добавить расход");
+                return RedirectToAction("Index", "InvestConcept", new { Id = exp.InvestConceptId, Message = "Не удалось добавить расход" });
             }
         }
 
@@ -341,10 +170,13 @@ namespace BFme.Controllers
         {
             try
             {
-                if (file == null) return Lot(LotId, "Попытка добавить файл в несуществующий лот");
-
                 Lot dblot = db.Lots.SingleOrDefault(i => i.Id == LotId);
-                if(dblot == null) return Index(1, "Попытка добавить файл в несуществующий лот");
+                if(dblot == null)
+                {
+                    return RedirectToAction("Index", "Home", new { LotId = LotId, Message = "Попытка добавить файл в несуществующий лот" });
+                }
+
+                //проверка существует ли файл с индексом
 
                 //-------
                 MemoryStream mStream = new MemoryStream();
@@ -361,16 +193,16 @@ namespace BFme.Controllers
                     db.Files.Add(lf);
                     await db.SaveChangesAsync();
 
-                    return Lot(LotId, "Файл успешно загружен");
+                    return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Файл успешно загружен" });
                 }
                 else
                 {
-                    return Lot(LotId, "Ошибка загрузки файла");
+                    return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Ошибка при загрузке файла на сервер" });
                 }
             }
             catch (Exception ex)
             {
-                return Lot(LotId, "Непредвиденная ошибка");
+                return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Не удалось загрузить файл" });
             }  
         }
 

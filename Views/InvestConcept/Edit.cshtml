@@ -1,6 +1,7 @@
 ﻿@using BFme.Models
 @{
-    ViewData["Title"] = "Редактирование инвестиционной идеи";
+    if (ViewBag.Action == "Add") ViewData["Title"] = "Добавление инвест идеи";
+    else if (ViewBag.Action == "Edit") ViewData["Title"] = "Редактирование инвест идеи";
 }
 
 <div class="text-center">
@@ -8,7 +9,7 @@
     <p class="alert-warning">@ViewBag.Message</p>
 </div>
 
-<form asp-action="EditInvestConcept" asp-controller="Home" method="post">
+<form asp-action="@ViewBag.Action" asp-controller="InvestConcept" method="post">
     <input type="hidden" name="Id" value="@ViewBag.SelectedInvestConcept.Id" />
     <input type="hidden" name="LotId" value="@ViewBag.SelectedInvestConcept.LotId" />
     <p>

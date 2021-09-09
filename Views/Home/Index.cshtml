@@ -1,6 +1,6 @@
 ﻿@using BFme.Models
 @{
-    ViewData["Title"] = "Lot Page";
+    ViewData["Title"] = "Список лотов";
 }
 
 <div class="text-center">
@@ -22,7 +22,7 @@
             <tr>
                 <td>@lot.Id</td>
                 <td>
-                    @Html.ActionLink(@lot.Name, "Lot", "Home", new { Id = lot.Id }, null)
+                    @Html.ActionLink(@lot.Name, "Index", "Lot", new { Id = lot.Id }, null)
                 </td>
                 <td>@lot.Information</td>
                 <td><a href="@lot.LinkEFRSB">ЕФРСБ</a></td>
@@ -30,10 +30,14 @@
                 <td>@lot.AuctionPrice</td>
             </tr>
         }
+        <tr>
+            <td colspan="6"> @Html.ActionLink("Добавить лот", "Add", "Lot", null)</td>
+        </tr>
     </table>
-    <form action="" method="post">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
         <p>Страница @ViewBag.CurrentPage</p>
-        <button name="page" value="@(ViewBag.CurrentPage - 1)">Предыдушая страница</button>
-        <button name="page" value="@(ViewBag.CurrentPage + 1)">Следующая страница</button>
-    </form>
+        <button name="Page" value="@(ViewBag.CurrentPage - 1)">Предыдушая страница</button>
+        <button name="Page" value="@(ViewBag.CurrentPage + 1)">Следующая страница</button>
+    }
 </div>

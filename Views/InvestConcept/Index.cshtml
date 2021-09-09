@@ -36,20 +36,20 @@
             @foreach (Expense ex in ViewBag.SelectedInvestConcept.Expenses)
             {
                 <tr>
-                    <td>@Html.ActionLink(@ex.Name, "Expense", "Home", new { Id = ex.Id }, null)</td>
+                    <td>@Html.ActionLink(@ex.Name, "Index", "Expense", new { Id = ex.Id }, null)</td>
                     <td>@ex.SinglePayment</td>
                     <td>@ex.MonthlyPayment</td>
-                    <td>@Html.ActionLink("Редактировать", "EditExpense", "Home", new { Id = ex.Id }, null)</td>
+                    <td>@Html.ActionLink("Редактировать", "Edit", "Expense", new { Id = ex.Id }, null)</td>
                 </tr>
             }
             <tr>
                 <td colspan="4">
-                    @Html.ActionLink("Добавить расход", "AddExpense", "Home", new { InvestConceptId = ViewBag.SelectedInvestConcept.Id }, null)
+                    @Html.ActionLink("Добавить расход", "Add", "Expense", new { InvestConceptId = ViewBag.SelectedInvestConcept.Id }, null)
                 </td>
             </tr>
         </table>
     </div>
 
 
-    @Html.ActionLink("Редактировать", "EditInvestConcept", "Home", new { Id = ViewBag.SelectedInvestConcept.Id }, null)
+    @Html.ActionLink("Редактировать", "Edit", "InvestConcept", new { Id = ViewBag.SelectedInvestConcept.Id }, null)
 </div>

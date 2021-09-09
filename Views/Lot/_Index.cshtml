@@ -36,17 +36,16 @@
                 <tr>
                     <td>@file.Name</td>
                     <td>
-                        @using (Html.BeginForm("Download", "Home", FormMethod.Post))
+                        @using (Html.BeginForm("Download", "Lot", FormMethod.Post))
                         {
-                            <input type="hidden" , name="Id", value="@file.Id" />
-                            <input type="submit" value="Скачать" />
+                            <input type="hidden" , name="Id", value="@file.Id" />   <input type="submit" value="Скачать" />
                         }
                     </td>
                 </tr>
             }
             <tr>
                 <td colspan="2">
-                    @using (Html.BeginForm("Upload", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("Upload", "Lot", FormMethod.Post))
                     {
                         <input type="hidden", name="LotId", value="@ViewBag.SelectedLot.Id" />
                         <input type="file" name="file" />   <input type="submit" value="Загрузить файл" />
@@ -73,13 +72,13 @@
                         Цена продажи, руб: @ic.SalePrice
                     </td>
                     <td>
-                        @Html.ActionLink("Редактировать", "EditInvestConcept", "Home", new { Id = ic.Id }, null)
+                        @Html.ActionLink("Редактировать", "Edit", "InvestConcept", new { Id = ic.Id }, null)
                     </td>
                 </tr>
             }
             <tr>
                 <td colspan="3">
-                    @Html.ActionLink("Добавить инвест идею", "AddInvestConcept", "Home", new { LotId = ViewBag.SelectedLot.Id }, null)
+                    @Html.ActionLink("Добавить инвест идею", "Add", "InvestConcept", new { LotId = ViewBag.SelectedLot.Id }, null)
                 </td>
             </tr>
         </table>
