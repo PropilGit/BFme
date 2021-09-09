@@ -38,7 +38,7 @@
                     <td>
                         @using (Html.BeginForm("Download", "Lot", FormMethod.Post))
                         {
-                            <input type="hidden" , name="Id", value="@file.Id" />   <input type="submit" value="Скачать" />
+                            <input type="hidden" name="Id" value="@file.Id" />   <input type="submit" value="Скачать" />
                         }
                     </td>
                 </tr>
@@ -47,7 +47,7 @@
                 <td colspan="2">
                     @using (Html.BeginForm("Upload", "Lot", FormMethod.Post))
                     {
-                        <input type="hidden", name="LotId", value="@ViewBag.SelectedLot.Id" />
+                        <input type="hidden" name="LotId" value="@ViewBag.SelectedLot.Id" />
                         <input type="file" name="file" />   <input type="submit" value="Загрузить файл" />
                     }
                 </td>

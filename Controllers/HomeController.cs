@@ -150,64 +150,6 @@ namespace BFme.Controllers
         }
         #endregion
 
-        #region Files
-
-        [HttpPost]
-        public IActionResult Download(int Id)
-        {
-            LotFile dblf = db.Files.SingleOrDefault(i => i.Id == Id);
-            if (dblf == null) return Index(1, "Файл не найден");
-
-            byte[] bytes = ftp.Download(Id.ToString());
-            return new FileContentResult(bytes, "application/txt")
-            {
-                FileDownloadName = dblf.Name
-            };
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file, int LotId)
-        {
-            try
-            {
-                Lot dblot = db.Lots.SingleOrDefault(i => i.Id == LotId);
-                if(dblot == null)
-                {
-                    return RedirectToAction("Index", "Home", new { LotId = LotId, Message = "Попытка добавить файл в несуществующий лот" });
-                }
-
-                //проверка существует ли файл с индексом
-
-                //-------
-                MemoryStream mStream = new MemoryStream();
-                file.OpenReadStream().CopyTo(mStream);
-
-                int Id = db.Files.Count() + 1;
-                if (ftp.Upload(Id.ToString(), mStream.ToArray()))
-                {
-                    LotFile lf = new LotFile();
-                    lf.Id = Id;
-                    lf.Name = file.FileName;
-                    lf.LotId = LotId;
-
-                    db.Files.Add(lf);
-                    await db.SaveChangesAsync();
-
-                    return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Файл успешно загружен" });
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Ошибка при загрузке файла на сервер" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Index", "Lot", new { LotId = LotId, Message = "Не удалось загрузить файл" });
-            }  
-        }
-
-        #endregion
-
         #region Error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

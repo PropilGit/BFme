@@ -1,8 +1,10 @@
 ﻿using BFme.Models;
 using BFme.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +14,12 @@ namespace BFme.Controllers
     {
 
         private InvestContext db;
+        private IFileController fc;
 
-        public LotController(InvestContext investContext)
+        public LotController(InvestContext investContext, IFileController fc)
         {
             this.db = investContext;
+            this.fc = fc;
         }
 
         [HttpGet]
@@ -108,5 +112,59 @@ namespace BFme.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        public IActionResult Download(int Id)
+        {
+            LotFile dblf = db.Files.SingleOrDefault(i => i.Id == Id);
+            if (dblf == null) return Index(1, "Файл не найден");
+
+            byte[] bytes = fc.Download(Id.ToString());
+            return new FileContentResult(bytes, "application/txt")
+            {
+                FileDownloadName = dblf.Name
+            };
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile File, int LotId)
+        {
+            try
+            {
+                Lot dblot = db.Lots.SingleOrDefault(i => i.Id == LotId);
+                if (dblot == null)
+                {
+                    return RedirectToAction("Index", "Home", new { LotId = LotId, Message = "Попытка добавить файл в несуществующий лот" });
+                }
+
+                //проверка существует ли файл с индексом
+
+                //-------
+                MemoryStream mStream = new MemoryStream();
+                File.OpenReadStream().CopyTo(mStream);
+
+                int Id = db.Files.Count() + 1;
+                if (fc.Upload(Id.ToString(), mStream.ToArray()))
+                {
+                    LotFile lf = new LotFile();
+                    lf.Id = Id;
+                    lf.Name = File.FileName;
+                    lf.LotId = LotId;
+
+                    db.Files.Add(lf);
+                    await db.SaveChangesAsync();
+
+                    return RedirectToAction("Index", "Lot", new { Id = LotId, Message = "Файл успешно загружен" });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Lot", new { Id = LotId, Message = "Ошибка при загрузке файла на сервер" });
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Lot", new { Id = LotId, Message = "Не удалось загрузить файл" });
+            }
+        }
     }
 }

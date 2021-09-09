@@ -1,0 +1,77 @@
+﻿@using BFme.Models
+@{
+
+}
+
+<form class="form-group">
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>Данные по банкротному лоту</legend>
+        <p class="alert-warning">@ViewBag.Message</p>
+
+        <!-- Name -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="Name">Название объекта</label>
+            <div class="col-md-8">
+                <input name="Name" type="text" value="@ViewBag.SelectedLot.Name" class="form-control input-md">
+
+            </div>
+        </div>
+
+        <!-- Information -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="Information">Описание</label>
+            <div class="col-md-8">
+                <textarea class="form-control" value="@ViewBag.SelectedLot.Information" name="Information"></textarea>
+            </div>
+        </div>
+
+        <!-- LinkEFRSB -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="LinkEFRSB">Ссылка на ЕФРСБ</label>
+            <div class="col-md-8">
+                <input value="@ViewBag.SelectedLot.LinkEFRSB" name="LinkEFRSB" type="text" class="form-control input-md">
+
+            </div>
+        </div>
+
+        <!-- LinkTradingPlatform -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="LinkTradingPlatform">Ссылка на ТП</label>
+            <div class="col-md-8">
+                <input value="@ViewBag.SelectedLot.LinkTradingPlatform" name="LinkTradingPlatform" type="text" value="" class="form-control input-md">
+            </div>
+        </div>
+
+        <!-- *** -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="textinput">Text Input</label>
+            <div class="col-md-8">
+                <input value="textinput" name="***" type="text" value="@ViewBag.SelectedLot.***" class="form-control input-md">
+            </div>
+        </div>
+
+    </fieldset>
+</form>
+
+<!-- Files -->
+<div class="form-group row">
+    <legend>Файлы:</legend>
+    <div class="container">
+        @foreach (LotFile file in ViewBag.SelectedLot.Files)
+        {
+            <div class="d-inline-block border">
+                @Html.ActionLink(file.Name, "Download", "Lot", new { Id = file.Id }, null)
+            </div>
+        }
+    </div>
+    <div class=" container">
+        @using (Html.BeginForm("Upload", "Lot", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="File" id="File" class="col-md-auto" />
+            <input type="hidden" name="LotId" value="@ViewBag.SelectedLot.Id" />
+            <input type="submit" value="Загрузить файл" />
+        }
+    </div>
+</div>
