@@ -18,7 +18,6 @@ namespace BFme.Models
         public List<Expense> Expenses { get; set; } = new List<Expense>();
 
         public int LotId { get; set; }
-        public Lot Lot { get; set; }
 
         public string Description() => "";
     }

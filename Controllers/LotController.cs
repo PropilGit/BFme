@@ -49,7 +49,7 @@ namespace BFme.Controllers
             ViewBag.Message = message;
             ViewBag.SelectedLot = new Lot();
             ViewBag.Action = "Add";
-            return View("Edit");
+            return View("Index");
         }
 
         [HttpPost]
@@ -92,7 +92,7 @@ namespace BFme.Controllers
 
             ViewBag.SelectedLot = lot;
             ViewBag.Action = "Edit";
-            return View("Edit");
+            return View("Index");
         }
 
         [HttpPost]
@@ -105,13 +105,31 @@ namespace BFme.Controllers
 
                 return Index(lot.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
+            {
+                return Index(lot.Id, "Не удалось отредактировать данный лот");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int LotId, )
+        {
+            try
+            {
+                db.Lots.Update(lot);
+                await db.SaveChangesAsync();
+
+                return Index(lot.Id);
+            }
+            catch (Exception ex)
             {
                 return Index(lot.Id, "Не удалось отредактировать данный лот");
             }
         }
 
         #endregion
+
+        #region Files
 
         [HttpGet]
         public IActionResult Download(int Id)
@@ -166,5 +184,7 @@ namespace BFme.Controllers
                 return RedirectToAction("Index", "Lot", new { Id = LotId, Message = "Не удалось загрузить файл" });
             }
         }
+
+        #endregion
     }
 }

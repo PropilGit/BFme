@@ -3,34 +3,49 @@
 
 }
 
-<form class="form-group">
+<!-- Lot-Agent -->
+<div class="container border rounded" style="background-color: #e9eef5">
+
+    @using (Html.BeginForm("Edit", "Lot", FormMethod.Post))
+    {
     <fieldset>
 
         <!-- Form Name -->
         <legend>Данные по банкротному лоту</legend>
         <p class="alert-warning">@ViewBag.Message</p>
 
+        <!-- Id -->
+        <input type="hidden" value="@ViewBag.SelectedLot.Id" name="Id" />
+
         <!-- Name -->
         <div class="form-group row">
             <label class="col-md-2 control-label" for="Name">Название объекта</label>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <input name="Name" type="text" value="@ViewBag.SelectedLot.Name" class="form-control input-md">
 
             </div>
         </div>
 
-        <!-- Information -->
+        <!-- Description -->
         <div class="form-group row">
-            <label class="col-md-2 control-label" for="Information">Описание</label>
-            <div class="col-md-8">
-                <textarea class="form-control" value="@ViewBag.SelectedLot.Information" name="Information"></textarea>
+            <label class="col-md-2 control-label" for="Description">Описание</label>
+            <div class="col-md-10">
+                <textarea class="form-control" name="Description">@ViewBag.SelectedLot.Description</textarea>
+            </div>
+        </div>
+
+        <!-- AuctionPrice -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="AuctionPrice">Цена на торгах</label>
+            <div class="col-md-10">
+                <input value="@ViewBag.SelectedLot.AuctionPrice" name="AuctionPrice" type="number" class="form-control input-md">
             </div>
         </div>
 
         <!-- LinkEFRSB -->
         <div class="form-group row">
             <label class="col-md-2 control-label" for="LinkEFRSB">Ссылка на ЕФРСБ</label>
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <input value="@ViewBag.SelectedLot.LinkEFRSB" name="LinkEFRSB" type="text" class="form-control input-md">
 
             </div>
@@ -39,39 +54,182 @@
         <!-- LinkTradingPlatform -->
         <div class="form-group row">
             <label class="col-md-2 control-label" for="LinkTradingPlatform">Ссылка на ТП</label>
-            <div class="col-md-8">
-                <input value="@ViewBag.SelectedLot.LinkTradingPlatform" name="LinkTradingPlatform" type="text" value="" class="form-control input-md">
+            <div class="col-md-10">
+                <input value="@ViewBag.SelectedLot.LinkTradingPlatform" name="LinkTradingPlatform" type="text" class="form-control input-md">
             </div>
         </div>
 
-        <!-- *** -->
+        <!-- Сохранить -->
         <div class="form-group row">
-            <label class="col-md-2 control-label" for="textinput">Text Input</label>
-            <div class="col-md-8">
-                <input value="textinput" name="***" type="text" value="@ViewBag.SelectedLot.***" class="form-control input-md">
+            <div class="col"></div>
+            <div class="col-2">
+                <input value="Сохранить" type="submit" class="form-control input-md">
             </div>
         </div>
 
     </fieldset>
-</form>
+    }
 
-<!-- Files -->
-<div class="form-group row">
-    <legend>Файлы:</legend>
-    <div class="container">
-        @foreach (LotFile file in ViewBag.SelectedLot.Files)
-        {
-            <div class="d-inline-block border">
-                @Html.ActionLink(file.Name, "Download", "Lot", new { Id = file.Id }, null)
+    <!-- Files -->
+    <div class="form-group container">
+        <legend>Файлы:</legend>
+        <div class="row">
+            @foreach (LotFile file in ViewBag.SelectedLot.Files)
+            {
+                <div class="col-md-auto border rounded-pill bg-light">
+                    @Html.ActionLink(file.Name, "Download", "Lot", new { Id = file.Id }, null)
+                </div>
+            }
+        </div>
+        <div class="pt-3 row">
+            <div class="col p-0">
+                @using (Html.BeginForm("Upload", "Lot", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" name="File" class="col-6 p-0" />
+                    <input type="submit" value="Загрузить файл" class="col-2 p-0" />
+                    <input type="hidden" name="LotId" value="@ViewBag.SelectedLot.Id" />
+                }
             </div>
-        }
+        </div>
     </div>
-    <div class=" container">
-        @using (Html.BeginForm("Upload", "Lot", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <input type="file" name="File" id="File" class="col-md-auto" />
-            <input type="hidden" name="LotId" value="@ViewBag.SelectedLot.Id" />
-            <input type="submit" value="Загрузить файл" />
-        }
+
+</div>
+
+<!-- Lot-Rieltor -->
+<div class="container border rounded mt-5" style="background-color: #c2ffe0">
+    @using (Html.BeginForm("Edit", "Lot", FormMethod.Post))
+    {
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>Данные по анализу рынка</legend>
+
+        <!-- Id -->
+        <input type="hidden" value="@ViewBag.SelectedLot.Id" name="LotId" />
+
+        <!-- MarketCost -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="MarketCost">Рыночная цена, руб</label>
+            <div class="col-md-10">
+                <input type="text" value="@ViewBag.SelectedLot.Review.MarketCost" name="MarketCost" class="form-control input-md">
+
+            </div>
+        </div>
+
+        <!-- Review -->
+        <div class="form-group row">
+            <label class="col-md-2 control-label" for="Description">Описание</label>
+            <div class="col-md-10">
+                <textarea class="form-control" value="@ViewBag.SelectedLot.Review.Description" name="Description"></textarea>
+            </div>
+        </div>
+
+        <!-- Сохранить -->
+        <div class="form-group row">
+            <div class="col"></div>
+            <div class="col-2">
+                <input value="Сохранить" type="submit" class="form-control input-md">
+            </div>
+        </div>
+
+    </fieldset>
+    }
+    </div>
+
+
+<!-- InvestConcepts -->
+@foreach (InvestConcept SelectedInvestConcept in ViewBag.SelectedLot.InvestConcepts)
+{
+    <!-- InvestConcept -->
+    <div class="container border rounded mt-5" style="background-color: #ffdab9">
+
+        <form class="form-group">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Инвест идея</legend>
+
+                <!-- Id -->
+                <input type="hidden" value="@SelectedInvestConcept.Id" name="Id" />
+
+                <!-- LotId -->
+                <input type="hidden" value="@ViewBag.SelectedLot.Id" name="Id" />
+
+                <div class="row">
+
+                    <div class="col-8">
+                        <!-- Name -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="Name">Название объекта</label>
+                            <div class="col-8">
+                                <input name="Name" type="text" value="@SelectedInvestConcept.Name" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- ImplementationPeriod -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="ImplementationPeriod">Срок реализации объекта, месяц</label>
+                            <div class="col-8">
+                                <input value="@SelectedInvestConcept.ImplementationPeriod" name="ImplementationPeriod" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- PurchasePrice -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="PurchasePrice">Цена покупки, руб</label>
+                            <div class="col-8">
+                                <input value="@SelectedInvestConcept.PurchasePrice" name="PurchasePrice" type="text" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- SalePrice -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="SalePrice">Цена продажи, руб</label>
+                            <div class="col-8">
+                                <input value="@SelectedInvestConcept.SalePrice" name="SalePrice" type="text" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- Expenses -->
+                        <div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <!-- Информация -->
+                        <textarea value="@SelectedInvestConcept.SalePrice" name="Info" type="te" class="form-control input-md"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Сохранить -->
+                <div class="form-group row">
+                    <div class="col"></div>
+                    <div class="col-2">
+                        <input value="Сохранить" type="submit" class="form-control input-md">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+}
+
+
+
+
+<!--
+<input type="hidden" name="LotId" value="@ViewBag.SelectedLot.Id" />
+                <input type="file" name="File" id="File" class="form-file-input" />
+                <input type="submit" value="Загрузить файл" class="form-control input-md" />
+-->
+<!--
+<div class="form-group row">
+    <label class="col-md-2 control-label" for="textinput">Text Input</label>
+    <div class="col-md-10">
+        <input value="@ViewBag.SelectedLot.***" name="***" type="text" class="form-control input-md">
     </div>
 </div>
+-->
