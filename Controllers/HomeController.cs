@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using BFme.Services;
 using System.IO;
+using BFme.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BFme.Controllers
 {
@@ -30,19 +32,20 @@ namespace BFme.Controllers
             this.ftp = ftp;
         }
 
+        [Authorize]
         public IActionResult Index(int Page = 1, string Message = "")
         {
-            ViewBag.Message = Message;
-
             if (Page < 1) Page = 1;
 
             int minRow = rowsPerPage * (Page - 1);
             int maxRow = rowsPerPage * (Page);
 
-            ViewBag.CurrentPage = Page;
-            ViewBag.Lots = db.Lots.Where(l => (l.Id > minRow) && (l.Id <= maxRow));
+            ListViewModel lvm = new ListViewModel(
+                db.Lots.Where(l => (l.Id > minRow) && (l.Id <= maxRow)).ToList(),
+                Page,
+                Message);
 
-            return View("Index");
+            return View("Index", lvm);
         }
         public IActionResult Error(string Message = "")
         {
@@ -50,13 +53,9 @@ namespace BFme.Controllers
             return View();
         }
 
-        #region InvestConcept
-
-        
-        #endregion
-
         #region Expense
 
+        [Authorize]
         [HttpGet]
         public IActionResult Expense(int Id)
         {
@@ -72,6 +71,7 @@ namespace BFme.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult AddExpense(int InvestConceptId, string message = "")
         {
@@ -85,6 +85,7 @@ namespace BFme.Controllers
             return View("EditExpense");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddExpense(Expense exp)
         {
@@ -116,6 +117,7 @@ namespace BFme.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult EditExpense(int Id)
         {
@@ -132,6 +134,7 @@ namespace BFme.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditExpense(Expense exp)
         {

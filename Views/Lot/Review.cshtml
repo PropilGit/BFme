@@ -1,0 +1,47 @@
+﻿@using BFme.Models
+@using BFme.ViewModels
+@model RieltorViewModel
+@{
+}
+
+
+<!-- Lot-Rieltor -->
+<div class="container border rounded mt-5" style="background-color: #c2ffe0">
+    @using (Html.BeginForm("Edit", "Lot", FormMethod.Post))
+    {
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>@Model.Name</legend>
+
+            <!-- Id -->
+            <input type="hidden" value="@Model.Id" name="LotId" />
+
+            <!-- MarketCost -->
+            <div class="form-group row">
+                <label class="col-md-2 control-label" for="MarketCost">Рыночная цена, руб</label>
+                <div class="col-md-10">
+                    <input type="text" value="@Model.MarketCost" name="MarketCost" class="form-control input-md">
+
+                </div>
+            </div>
+
+            <!-- Review -->
+            <div class="form-group row">
+                <label class="col-md-2 control-label" for="Review">Описание</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" value="@Model.Review" name="Review"></textarea>
+                </div>
+            </div>
+
+            <!-- Сохранить -->
+            <div class="form-group row">
+                <div class="col"></div>
+                <div class="col-2">
+                    <input value="Сохранить" type="submit" class="form-control input-md">
+                </div>
+            </div>
+
+        </fieldset>
+    }
+</div>

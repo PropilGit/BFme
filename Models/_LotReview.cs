@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BFme.Models
 {
-    public class LotReview
+    public class _LotReview
     {
         [Key]
         public int Id { get; set; }

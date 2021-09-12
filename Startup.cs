@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BFme.Infrastructure;
 using BFme.Models;
 using BFme.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,14 +35,20 @@ namespace BFme
             access = JSONConverter.OpenJSONFile<Access>(Environment.CurrentDirectory + "\\_access\\access.json");
 
             // БД
+            // InvextContext
             string dbConnection = "Server=" + access.Server + "; Database=" + access.Login + ";user=" + access.Login + ";password=" + access.Password + ";";
             services.AddDbContext<InvestContext>(options => options.UseMySql(dbConnection));
-            //services.AddSingleton<IDbController, DbController>();
-            
 
             // FTP
             services.AddSingleton<IFileController, FtpController>();
 
+            // установка конфигурации подключения
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Login/Index");
+                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Login/Index");
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IFileController ftp)
@@ -62,6 +69,7 @@ namespace BFme
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

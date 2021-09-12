@@ -1,4 +1,5 @@
 ﻿using BFme.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace BFme.Controllers
             this.db = investContext;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult Index(int Id, string Message = "")
         {
@@ -33,6 +35,7 @@ namespace BFme.Controllers
 
         #region Add
 
+        [Authorize]
         [HttpGet]
         public IActionResult Add(int LotId, string Message = "")
         {
@@ -45,6 +48,7 @@ namespace BFme.Controllers
             return View("Edit");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add(InvestConcept NewInvestConcept)
         {
@@ -78,6 +82,7 @@ namespace BFme.Controllers
 
         #region Edit
 
+        [Authorize]
         [HttpGet]
         public IActionResult Edit(int Id, string Message = "")
         {
@@ -93,6 +98,7 @@ namespace BFme.Controllers
             return View("Edit");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(InvestConcept NewInvestConcept)
         {

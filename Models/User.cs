@@ -6,12 +6,17 @@ using System.Threading.Tasks;
 
 namespace BFme.Models
 {
-    public class LotFile
+    public class User
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
+        [Required]
+        public string Login { get; set; }
+        [Required]
+        public string Password { get; set; }
 
-        public int LotId { get; set; }
+        public int? RoleId { get; set; }
+        public Role Role { get; set; }
+
     }
 }

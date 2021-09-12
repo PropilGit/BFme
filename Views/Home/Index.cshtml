@@ -1,23 +1,21 @@
 ﻿@using BFme.Models
-@{
-    ViewData["Title"] = "Список лотов";
-}
+@using BFme.ViewModels
+@model ListViewModel
 
 <div class="text-center">
     <h1 class="display-4">Список лотов</h1>
-    <p class="alert-warning">@ViewBag.Message</p>
+    <h5>@User.Identity.Name</h5>
+    <p class="alert-warning">@Model.Message</p>
 </div>
-<div class="w-100">
+
+<div>
     <table class="table-bordered">
         <tr>
             <td>Номер</td>
             <td>Название</td>
             <td>Описание</td>
-            <td>Ссылка на ЕФРСБ</td>
-            <td>Ссылка на ТП</td>
-            <td>Цена на торгах</td>
         </tr>
-        @foreach (Lot lot in ViewBag.Lots)
+        @foreach (LotRow lot in Model.Lots)
         {
             <tr>
                 <td>@lot.Id</td>
@@ -25,19 +23,18 @@
                     @Html.ActionLink(@lot.Name, "Index", "Lot", new { Id = lot.Id }, null)
                 </td>
                 <td>@lot.Description</td>
-                <td><a href="@lot.LinkEFRSB">ЕФРСБ</a></td>
-                <td><a href="@lot.LinkTradingPlatform">ТП</a></td>
-                <td>@lot.AuctionPrice</td>
             </tr>
         }
+
         <tr>
-            <td colspan="6"> @Html.ActionLink("Добавить лот", "Add", "Lot", null)</td>
+            <td colspan="3"> @Html.ActionLink("Добавить лот", "Add", "Lot", null)</td>
         </tr>
     </table>
+    <!--Предыдущая/Следующая страница-->
     @using (Html.BeginForm("Index", "Home", FormMethod.Post))
     {
-        <p>Страница @ViewBag.CurrentPage</p>
-        <button name="Page" value="@(ViewBag.CurrentPage - 1)">Предыдушая страница</button>
-        <button name="Page" value="@(ViewBag.CurrentPage + 1)">Следующая страница</button>
+        <p>Страница @Model.CurrentPage</p>
+        <button name="Page" value="@(Model.CurrentPage - 1)">Предыдушая страница</button>
+        <button name="Page" value="@(Model.CurrentPage + 1)">Следующая страница</button>
     }
 </div>

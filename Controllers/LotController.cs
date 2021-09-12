@@ -1,5 +1,7 @@
 ﻿using BFme.Models;
 using BFme.Services;
+using BFme.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,37 +24,66 @@ namespace BFme.Controllers
             this.fc = fc;
         }
 
-        [HttpGet]
-        public IActionResult Index(int Id, string message = "")
+        #region Index
+
+        [HttpGet][Authorize]
+        public IActionResult Index(int Id, string Message = "")
         {
-            ViewBag.Message = message;
-            Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
-            if (lot == null)
+            User user = db.Users.FirstOrDefault(u => u.Login == User.Identity.Name);
+            user.Role = db.Roles.FirstOrDefault(r => r.Id == user.RoleId);
+            if (user.Role.Name == "agent")
             {
-                return Add("Не найдено лота с индексом " + Id);
+                return Agent(Id, Message);
             }
- 
+            if (user.Role.Name == "rieltor")
+            {
+                return Rieltor(Id, Message);
+            }
+            else return RedirectToAction("Index", "Home", new { Message = "Ошибка Авторизации #0001" });
+        }
+
+        
+        [HttpGet][Authorize(Roles = "admin, agent")]
+        public IActionResult Agent(int Id, string Message = "")
+        {
+            Lot lot = db.Lots.FirstOrDefault(l => l.Id == Id);
+            if (lot == null) return Add("Не найдено лота с индексом " + Id);
+
             lot.Files = db.Files.Where(c => c.LotId == Id).ToList();
             lot.InvestConcepts = db.InvestConcepts.Where(c => c.LotId == Id).ToList();
             foreach (var ic in lot.InvestConcepts) ic.Expenses = db.Expenses.Where(c => c.InvestConceptId == ic.Id).ToList();
 
-            ViewBag.SelectedLot = lot;
-            ViewBag.Action = "Edit";
-            return View("Index");
+            return View("Index", new AgentViewModel(lot, ActionsEnum.Edit, Message));
         }
+
+        [HttpGet]
+        [Authorize(Roles = "admin, rieltor")]
+        public IActionResult Rieltor(int Id, string Message = "")
+        {
+            Lot lot = db.Lots.FirstOrDefault(l => l.Id == Id);
+            if (lot == null) return Add("Не найдено лота с индексом " + Id);
+
+            return View("Review", new RieltorViewModel(lot, Message));
+        }
+
+        #endregion
 
         #region Add
 
         [HttpGet]
-        public IActionResult Add(string message = "")
+        [Authorize(Roles = "admin, agent")]
+        public IActionResult Add(string Message = "")
         {
-            ViewBag.Message = message;
-            ViewBag.SelectedLot = new Lot();
-            ViewBag.Action = "Add";
-            return View("Index");
+            AgentViewModel avm = new AgentViewModel(
+                new Lot(),
+                ActionsEnum.Add,
+                Message);
+
+            return View("Index", avm);
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin, agent")]
         public async Task<IActionResult> Add(Lot lot)
         {
             try
@@ -68,7 +99,7 @@ namespace BFme.Controllers
                     db.Lots.Add(lot);
                     await db.SaveChangesAsync();
 
-                    return Index(lot.Id);
+                    return Index(lot.Id, "Новый лот успешно создан");
                 }
             }
             catch (Exception)
@@ -81,8 +112,9 @@ namespace BFme.Controllers
 
         #region Edit
 
+        [Authorize]
         [HttpGet]
-        public IActionResult Edit(int Id)
+        public IActionResult Edit(int Id, string Message = "")
         {
             Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
             if (lot == null)
@@ -90,40 +122,40 @@ namespace BFme.Controllers
                 return RedirectToAction("Index", "Home", new { Page = 1, Message = "Не удалось найти данный лот в БД" });
             }
 
-            ViewBag.SelectedLot = lot;
-            ViewBag.Action = "Edit";
-            return View("Index");
+            AgentViewModel avm = new AgentViewModel(
+                lot,
+                ActionsEnum.Edit,
+                Message);
+
+            return View("Index", avm);
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(Lot lot)
+        public async Task<IActionResult> Edit(int Id, string Name, string Description, float AuctionPrice, string LinkEFRSB, string LinkTradingPlatform)
         {
             try
             {
-                db.Lots.Update(lot);
+                Lot dblot = db.Lots.Where(l => l.Id == Id).FirstOrDefault();
+                if (dblot == null)
+                {
+                    return RedirectToAction("Index", "Home", new { Page = 1, Message = "попытка отредактировать несуществующий лот" });
+                }
+
+                dblot.Name = Name;
+                dblot.Description = Description;
+                dblot.AuctionPrice = AuctionPrice;
+                dblot.LinkEFRSB = LinkEFRSB;
+                dblot.LinkTradingPlatform = LinkTradingPlatform;
+
+                db.Lots.Update(dblot);
                 await db.SaveChangesAsync();
 
-                return Index(lot.Id);
+                return Index(Id, "Изменения сохранены");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Index(lot.Id, "Не удалось отредактировать данный лот");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int LotId, )
-        {
-            try
-            {
-                db.Lots.Update(lot);
-                await db.SaveChangesAsync();
-
-                return Index(lot.Id);
-            }
-            catch (Exception ex)
-            {
-                return Index(lot.Id, "Не удалось отредактировать данный лот");
+                return Index(Id, "Не удалось отредактировать данный лот");
             }
         }
 
@@ -131,6 +163,7 @@ namespace BFme.Controllers
 
         #region Files
 
+        [Authorize]
         [HttpGet]
         public IActionResult Download(int Id)
         {
@@ -144,6 +177,7 @@ namespace BFme.Controllers
             };
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile File, int LotId)
         {

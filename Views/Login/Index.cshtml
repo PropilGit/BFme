@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Login Page</h1>
+    <p>@ViewBag.Message</p>
+    <form asp-action="Index" asp-controller="Login" asp-anti-forgery="true" method="post">
+        <p>
+            <text>Логин:</text><br>
+            <input class="w-50" type="text" name="Login" />
+        </p>
+        <p>
+            <text>Пароль:</text><br>
+            <input class="w-50" type="password" name="Password" />
+        </p>
+        <input type="submit" value="Войти" />
+    </form>
+</div>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BFme.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,6 +9,22 @@ namespace BFme.Models
 {
     public class Lot
     {
+        public Lot()
+        {
+            Id = 0;
+            Name = "";
+            Description = "";
+            AuctionPrice = 0;
+            LinkEFRSB = "";
+            LinkTradingPlatform = "";
+
+            MarketCost = 0;
+            Review = "";
+
+            InvestConcepts = new List<InvestConcept>();
+            Files = new List<LotFile>();
+        }
+
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,8 +36,6 @@ namespace BFme.Models
         public float MarketCost { get; set; }
         public string Review { get; set; }
 
-
-        //public LotReview Review { get; set; } = new LotReview();
         public List<InvestConcept> InvestConcepts { get; set; } = new List<InvestConcept>();
         public List<LotFile> Files { get; set; } = new List<LotFile>();
     }
