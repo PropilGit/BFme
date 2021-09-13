@@ -1,0 +1,16 @@
+﻿@model List<Expense>
+<table>
+    <tr>
+        <td>Категория расхода</td>
+        <td>Разово</td>
+        <td>Ежемесячно</td>
+    </tr>
+    @foreach (var exp in Model)
+    {
+        <tr>
+            <td>@exp.Name</td>
+            <td>@exp.SinglePayment</td>
+            <td>@exp.MonthlyPayment</td>
+        </tr> 
+    }
+</table>

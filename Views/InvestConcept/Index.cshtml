@@ -1,55 +1,94 @@
-﻿@using BFme.Models
-@{
-    ViewData["Title"] = "Карточка инвест идеи";
-}
+﻿@model InvestConcept
 
-<div class="text-center">
-    <h1 class="display-4">Карточка инвест идеи</h1>
-    <p class="alert-warning">@ViewBag.Message</p>
+<div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetExpenses();
+        });
+
+        function GetExpenses() {
+            $.ajax({
+                type: 'POST',
+                url: '/InvestConcept/GetExpenses',
+                data: { "Id": Id },
+                success: function (data) {
+                    $('Expenses_@Model.Id').append(data)
+                },
+                error: function (xhr, str) {
+
+                }
+            });
+        }
+    </script>
+
+    <fieldset>
+
+        <!-- Form Name -->
+        <legend>Инвест идея</legend>
+
+        <!-- Id -->
+        <input type="hidden" value="@Model.Id" name="Id" />
+
+        <!-- LotId -->
+        <input type="hidden" value="@Model.LotId" name="LotId" />
+
+        <div class="row">
+
+            <div class="col-8">
+                <!-- Name -->
+                <div class="form-group row">
+                    <label class="col-4 control-label" for="Name">Название объекта</label>
+                    <div class="col-8">
+                        <input name="Name" type="text" value="@Model.Name" class="form-control input-md">
+                    </div>
+                </div>
+
+                <!-- ImplementationPeriod -->
+                <div class="form-group row">
+                    <label class="col-4 control-label" for="ImplementationPeriod">Срок реализации объекта, месяц</label>
+                    <div class="col-8">
+                        <input value="@Model.ImplementationPeriod" name="ImplementationPeriod" type="text" class="form-control">
+                    </div>
+                </div>
+
+                <!-- PurchasePrice -->
+                <div class="form-group row">
+                    <label class="col-4 control-label" for="PurchasePrice">Цена покупки, руб</label>
+                    <div class="col-8">
+                        <input value="@Model.PurchasePrice" name="PurchasePrice" type="text" class="form-control input-md">
+                    </div>
+                </div>
+
+                <!-- SalePrice -->
+                <div class="form-group row">
+                    <label class="col-4 control-label" for="SalePrice">Цена продажи, руб</label>
+                    <div class="col-8">
+                        <input value="@Model.SalePrice" name="SalePrice" type="text" class="form-control input-md">
+                    </div>
+                </div>
+
+                <!-- Expenses -->
+
+                <div id="Expenses_@Model.Id"></div>
+            </div>
+
+            <div class="col-4">
+                <!-- Информация -->
+                <textarea value="@Model.SalePrice" name="Info" type="te" class="form-control input-md"></textarea>
+            </div>
+
+        </div>
+
+        <!-- Сохранить -->
+        <div class="form-group row">
+            <div class="col"></div>
+            <div class="col-2">
+                <input value="Сохранить" type="submit" class="form-control input-md">
+            </div>
+        </div>
+
+    </fieldset>
+
 </div>
-<div class="form-group w-100">
-    <p>
-        <text>Срок реализации объекта, месяц:</text><br>
-        <text>@ViewBag.SelectedInvestConcept.ImplementationPeriod</text>
-    </p>
-    <p>
-        <text>Цена покупки, руб:</text><br>
-        <text>@ViewBag.SelectedInvestConcept.PurchasePrice</text>
-    </p>
-    <p>
-        <text>Цена продажи, руб:</text><br>
-        <text>@ViewBag.SelectedInvestConcept.SalePrice</text>
-    </p>
-    <p>
-        <text>Описание:</text><br>
-        <text>@ViewBag.SelectedInvestConcept.Description()</text>
-    </p>
 
-    <div>
-        <table class="table-bordered">
-            <tr>
-                <td><b>Категория расхода</b></td>
-                <td><b>Разово</b></td>
-                <td><b>Ежемесячно</b></td>
-                <td><b>Изменить</b></td>
-            </tr>
-            @foreach (Expense ex in ViewBag.SelectedInvestConcept.Expenses)
-            {
-                <tr>
-                    <td>@Html.ActionLink(@ex.Name, "Index", "Expense", new { Id = ex.Id }, null)</td>
-                    <td>@ex.SinglePayment</td>
-                    <td>@ex.MonthlyPayment</td>
-                    <td>@Html.ActionLink("Редактировать", "Edit", "Expense", new { Id = ex.Id }, null)</td>
-                </tr>
-            }
-            <tr>
-                <td colspan="4">
-                    @Html.ActionLink("Добавить расход", "Add", "Expense", new { InvestConceptId = ViewBag.SelectedInvestConcept.Id }, null)
-                </td>
-            </tr>
-        </table>
-    </div>
-
-
-    @Html.ActionLink("Редактировать", "Edit", "InvestConcept", new { Id = ViewBag.SelectedInvestConcept.Id }, null)
-</div>

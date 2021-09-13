@@ -1,10 +1,12 @@
 ﻿using BFme.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BFme.Controllers
 {
@@ -18,7 +20,8 @@ namespace BFme.Controllers
         }
 
 
-        [HttpPost][Authorize(Roles = "agent")]
+        [HttpPost]
+        [Authorize(Roles = "agent")]
         public async Task<IActionResult> Add(InvestConcept InvestConcept)
         {
             try
@@ -48,7 +51,8 @@ namespace BFme.Controllers
             }
         }
 
-        [HttpPost][Authorize(Roles = "agent")]
+        [HttpPost]
+        [Authorize(Roles = "agent")]
         public async Task<IActionResult> Edit(InvestConcept InvestConcept)
         {
             try
@@ -64,7 +68,59 @@ namespace BFme.Controllers
             }
         }
 
+        public async Task<JsonResult> AddExpense(Expense exp)
+        {
+            try
+            {
+                /*
+                InvestConcept dbexp = db.InvestConcepts.SingleOrDefault(i => i.Id == exp.Id);
+                if (dbexp != null)
+                {
+                    ViewBag.Message = "Попытка добавить уже существующую инвест идею";
+                    ViewBag.Action = "EditExpense";
+                    return EditExpense(exp.Id);
+                }
 
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(l => l.Id == exp.InvestConceptId);
+                if (dbic == null)
+                {
+                    return Index(1, "Попытка добавить расход в несуществующую инвест идею");
+                }
+                */
+                exp.Id = db.Expenses.Count() + 1;
+                db.Expenses.Add(exp);
+                await db.SaveChangesAsync();
+
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+        #region kal
+
+        [HttpPost]
+        [Authorize(Roles = "agent")]
+        public JsonResult GetExpensesJson(int Id)
+        {
+            List<Expense> exps = db.Expenses.Where(e => e.InvestConceptId == Id).ToList();
+            return Json("ExpensesList", exps);
+        }
+        public HtmlString GetExpensesHtml(int Id)
+        {
+            List<Expense> exps = db.Expenses.Where(e => e.InvestConceptId == Id).ToList();
+
+            string result = "<table><tr><<td>Категория расхода</td><td>Разово</td><td>Ежемесячно</td></tr>";
+            foreach (var exp in exps)
+            {
+                result = "{result}<tr><td>{exp.Name}</td><td>{exp.SinglePayment}</td><td>{exp.MonthlyPayment}</td></tr></table>";
+            }
+            return new HtmlString(result);
+        }
+
+        #endregion
     }
 }
 
