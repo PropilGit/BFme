@@ -17,6 +17,58 @@ namespace BFme.Controllers
             this.db = investContext;
         }
 
+
+        [HttpPost][Authorize(Roles = "agent")]
+        public async Task<IActionResult> Add(InvestConcept InvestConcept)
+        {
+            try
+            {
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(i => i.Id == InvestConcept.Id);
+                if (dbic != null)
+                {
+                    //return Index(InvestConcept.Id, "");
+                    return RedirectToAction("Index", "Lot", new { Id = dbic.LotId, Message = "Попытка добавить уже существующую инвест идею" });
+                }
+
+                Lot dblot = db.Lots.SingleOrDefault(l => l.Id == InvestConcept.LotId);
+                if (dblot == null)
+                {
+                    return RedirectToAction("Index", "Home", new { Page = 1, Message = "Попытка добавить инвест идею в несуществующий лот" });
+                }
+
+                InvestConcept.Id = db.InvestConcepts.Count() + 1;
+                db.InvestConcepts.Add(InvestConcept);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Lot", new { Id = InvestConcept.LotId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home", new { Page = 1, Message = "Не удалось добавить инвест идею" });
+            }
+        }
+
+        [HttpPost][Authorize(Roles = "agent")]
+        public async Task<IActionResult> Edit(InvestConcept InvestConcept)
+        {
+            try
+            {
+                db.InvestConcepts.Update(InvestConcept);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Lot", new { Id = InvestConcept.LotId });
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Lot", new { Id = InvestConcept.LotId, Message = "Не удалось отредактировать инвест идею" });
+            }
+        }
+
+
+    }
+}
+
+/*
         [Authorize]
         [HttpGet]
         public IActionResult Index(int Id, string Message = "")
@@ -116,5 +168,4 @@ namespace BFme.Controllers
         }
 
         #endregion
-    }
-}
+        */

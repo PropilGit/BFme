@@ -6,16 +6,18 @@
 
 
 <!-- Lot-Rieltor -->
-<div class="container border rounded mt-5" style="background-color: #c2ffe0">
-    @using (Html.BeginForm("Edit", "Lot", FormMethod.Post))
+<div class="container border rounded mt-5 pt-3" style="background-color: #c2ffe0">
+    @using (Html.BeginForm("EditReview", "Lot", FormMethod.Post))
     {
         <fieldset>
 
             <!-- Form Name -->
-            <legend>@Model.Name</legend>
+            <legend>Данные по анализу рынка</legend>
+
+            <h4>@Model.Name</h4>
 
             <!-- Id -->
-            <input type="hidden" value="@Model.Id" name="LotId" />
+            <input type="hidden" value="@Model.Id" name="Id" />
 
             <!-- MarketCost -->
             <div class="form-group row">
@@ -30,7 +32,7 @@
             <div class="form-group row">
                 <label class="col-md-2 control-label" for="Review">Описание</label>
                 <div class="col-md-10">
-                    <textarea class="form-control" value="@Model.Review" name="Review"></textarea>
+                    <textarea class="form-control" name="Review">@Model.Review</textarea>
                 </div>
             </div>
 

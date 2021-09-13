@@ -11,6 +11,7 @@ namespace BFme.ViewModels
         public RieltorViewModel(Lot Lot, string Message = "")
         {
             Id = Lot.Id;
+            Name = Lot.Name;
             MarketCost = Lot.MarketCost;
             Review = Lot.Review;
             this.Message = Message;

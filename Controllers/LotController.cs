@@ -43,7 +43,7 @@ namespace BFme.Controllers
         }
 
         
-        [HttpGet][Authorize(Roles = "admin, agent")]
+        [HttpGet][Authorize(Roles = "agent")]
         public IActionResult Agent(int Id, string Message = "")
         {
             Lot lot = db.Lots.FirstOrDefault(l => l.Id == Id);
@@ -56,8 +56,7 @@ namespace BFme.Controllers
             return View("Index", new AgentViewModel(lot, ActionsEnum.Edit, Message));
         }
 
-        [HttpGet]
-        [Authorize(Roles = "admin, rieltor")]
+        [HttpGet][Authorize(Roles = "rieltor")]
         public IActionResult Rieltor(int Id, string Message = "")
         {
             Lot lot = db.Lots.FirstOrDefault(l => l.Id == Id);
@@ -70,8 +69,7 @@ namespace BFme.Controllers
 
         #region Add
 
-        [HttpGet]
-        [Authorize(Roles = "admin, agent")]
+        [HttpGet][Authorize(Roles = "agent")]
         public IActionResult Add(string Message = "")
         {
             AgentViewModel avm = new AgentViewModel(
@@ -82,8 +80,7 @@ namespace BFme.Controllers
             return View("Index", avm);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "admin, agent")]
+        [HttpPost][Authorize(Roles = "agent")]
         public async Task<IActionResult> Add(Lot lot)
         {
             try
@@ -112,50 +109,44 @@ namespace BFme.Controllers
 
         #region Edit
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Edit(int Id, string Message = "")
-        {
-            Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
-            if (lot == null)
-            {
-                return RedirectToAction("Index", "Home", new { Page = 1, Message = "Не удалось найти данный лот в БД" });
-            }
-
-            AgentViewModel avm = new AgentViewModel(
-                lot,
-                ActionsEnum.Edit,
-                Message);
-
-            return View("Index", avm);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Edit(int Id, string Name, string Description, float AuctionPrice, string LinkEFRSB, string LinkTradingPlatform)
+        [HttpPost][Authorize(Roles = "agent")]
+        public async Task<IActionResult> Edit(Lot Lot)
         {
             try
             {
-                Lot dblot = db.Lots.Where(l => l.Id == Id).FirstOrDefault();
+                db.Lots.Update(Lot);
+                await db.SaveChangesAsync();
+
+                return Index(Lot.Id, "Изменения сохранены");
+            }
+            catch (Exception)
+            {
+                return Index(Lot.Id, "Не удалось отредактировать данный лот");
+            }
+        }
+
+        [HttpPost][Authorize(Roles = "rieltor")]
+        public async Task<IActionResult> EditReview(Lot Lot)
+        {
+            try
+            {
+                Lot dblot = db.Lots.Where(l => l.Id == Lot.Id).FirstOrDefault();
                 if (dblot == null)
                 {
-                    return RedirectToAction("Index", "Home", new { Page = 1, Message = "попытка отредактировать несуществующий лот" });
+                    return RedirectToAction("Index", "Home", new { Page = 1, Message = "Попытка отредактировать несуществующий лот" });
                 }
 
-                dblot.Name = Name;
-                dblot.Description = Description;
-                dblot.AuctionPrice = AuctionPrice;
-                dblot.LinkEFRSB = LinkEFRSB;
-                dblot.LinkTradingPlatform = LinkTradingPlatform;
+                dblot.MarketCost = Lot.MarketCost;
+                dblot.Review = Lot.Review;
 
                 db.Lots.Update(dblot);
                 await db.SaveChangesAsync();
 
-                return Index(Id, "Изменения сохранены");
+                return Index(Lot.Id, "Изменения сохранены");
             }
             catch (Exception)
             {
-                return Index(Id, "Не удалось отредактировать данный лот");
+                return Index(Lot.Id, "Не удалось отредактировать данный лот");
             }
         }
 
@@ -222,3 +213,24 @@ namespace BFme.Controllers
         #endregion
     }
 }
+
+
+/*
+        [Authorize]
+        [HttpGet]
+        public IActionResult Edit(int Id, string Message = "")
+        {
+            Lot lot = db.Lots.SingleOrDefault(l => l.Id == Id);
+            if (lot == null)
+            {
+                return RedirectToAction("Index", "Home", new { Page = 1, Message = "Не удалось найти данный лот в БД" });
+            }
+
+            AgentViewModel avm = new AgentViewModel(
+                lot,
+                ActionsEnum.Edit,
+                Message);
+
+            return View("Index", avm);
+        }
+*/

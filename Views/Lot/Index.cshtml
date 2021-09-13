@@ -61,7 +61,7 @@
         </div>
 
         <!-- Lot-Rieltor -->
-        <div class="container border rounded m-0 pt-3 pb-3" style="background-color: #c2ffe0">
+        <div class="container border rounded mt-0 ml-0 mr-0 mb-3 pt-3" style="background-color: #c2ffe0">
 
             <!-- MarketCost -->
             <div class="form-group row">
@@ -76,7 +76,7 @@
             <div class="form-group row">
                 <label class="col-md-2 control-label" for="Review">Описание</label>
                 <div class="col-md-10">
-                    <textarea class="form-control" value="@Model.Review" name="Review"></textarea>
+                    <textarea class="form-control" name="Review">@Model.Review</textarea>
                 </div>
             </div>
         </div>
@@ -142,83 +142,106 @@
         <!-- InvestConcept -->
     <div class="container border rounded mt-5" style="background-color: #ffdab9">
 
-        @using (Html.BeginForm(Model.Action.ToString(), "Lot", FormMethod.Post))
-            {
-        <fieldset>
+        @using (Html.BeginForm("Edit", "InvestConcept", FormMethod.Post))
+        {
+            <fieldset>
 
-            <!-- Form Name -->
-            <legend>Инвест идея</legend>
+                <!-- Form Name -->
+                <legend>Инвест идея</legend>
 
-            <!-- Id -->
-            <input type="hidden" value="@ic.Id" name="Id" />
+                <!-- Id -->
+                <input type="hidden" value="@ic.Id" name="Id" />
 
-            <!-- LotId -->
-            <input type="hidden" value="@Model.Id" name="Id" />
+                <!-- LotId -->
+                <input type="hidden" value="@Model.Id" name="LotId" />
 
-            <div class="row">
+                <div class="row">
 
-                <div class="col-8">
-                    <!-- Name -->
-                    <div class="form-group row">
-                        <label class="col-4 control-label" for="Name">Название объекта</label>
-                        <div class="col-8">
-                            <input name="Name" type="text" value="@ic.Name" class="form-control input-md">
+                    <div class="col-8">
+                        <!-- Name -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="Name">Название объекта</label>
+                            <div class="col-8">
+                                <input name="Name" type="text" value="@ic.Name" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- ImplementationPeriod -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="ImplementationPeriod">Срок реализации объекта, месяц</label>
+                            <div class="col-8">
+                                <input value="@ic.ImplementationPeriod" name="ImplementationPeriod" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <!-- PurchasePrice -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="PurchasePrice">Цена покупки, руб</label>
+                            <div class="col-8">
+                                <input value="@ic.PurchasePrice" name="PurchasePrice" type="text" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- SalePrice -->
+                        <div class="form-group row">
+                            <label class="col-4 control-label" for="SalePrice">Цена продажи, руб</label>
+                            <div class="col-8">
+                                <input value="@ic.SalePrice" name="SalePrice" type="text" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- Expenses -->
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>Категория расхода</td>
+                                    <td>Разово</td>
+                                    <td>Ежемесячно</td>
+                                </tr>
+                                @foreach (var exp in ic.Expenses)
+                                {
+                                    <td>@exp.Name</td>
+                                    <td>@exp.SinglePayment</td>
+                                    <td>@exp.MonthlyPayment</td>
+                                }
+                            </table>
                         </div>
                     </div>
 
-                    <!-- ImplementationPeriod -->
-                    <div class="form-group row">
-                        <label class="col-4 control-label" for="ImplementationPeriod">Срок реализации объекта, месяц</label>
-                        <div class="col-8">
-                            <input value="@ic.ImplementationPeriod" name="ImplementationPeriod" type="text" class="form-control">
-                        </div>
+                    <div class="col-4">
+                        <!-- Информация -->
+                        <textarea value="@ic.SalePrice" name="Info" type="te" class="form-control input-md"></textarea>
                     </div>
 
-                    <!-- PurchasePrice -->
-                    <div class="form-group row">
-                        <label class="col-4 control-label" for="PurchasePrice">Цена покупки, руб</label>
-                        <div class="col-8">
-                            <input value="@ic.PurchasePrice" name="PurchasePrice" type="text" class="form-control input-md">
-                        </div>
-                    </div>
+                </div>
 
-                    <!-- SalePrice -->
-                    <div class="form-group row">
-                        <label class="col-4 control-label" for="SalePrice">Цена продажи, руб</label>
-                        <div class="col-8">
-                            <input value="@ic.SalePrice" name="SalePrice" type="text" class="form-control input-md">
-                        </div>
-                    </div>
-
-                    <!-- Expenses -->
-                    <div>
-
+                <!-- Сохранить -->
+                <div class="form-group row">
+                    <div class="col"></div>
+                    <div class="col-2">
+                        <input value="Сохранить" type="submit" class="form-control input-md">
                     </div>
                 </div>
 
-                <div class="col-4">
-                    <!-- Информация -->
-                    <textarea value="@ic.SalePrice" name="Info" type="te" class="form-control input-md"></textarea>
-                </div>
-
-            </div>
-
-            <!-- Сохранить -->
-            <div class="form-group row">
-                <div class="col"></div>
-                <div class="col-2">
-                    <input value="Сохранить" type="submit" class="form-control input-md">
-                </div>
-            </div>
-
-        </fieldset>
-            }
+            </fieldset>
+        }
 
     </div>
     }
 
-    <div>
-        @Html.ActionLink("Добавить ин", "AddExpense", "Home", new { }, null)
+<div>
+    <div class="container pt-5 pb-5 pl-0 pr-0">
+        @using (Html.BeginForm("Add", "InvestConcept", FormMethod.Post))
+        {
+            <!-- Id -->
+            <input type="hidden" value="@Model.Id" name="LotId" />
+
+            <!-- Добавить инвест идею -->
+            <div class="form-group align-content-center">
+                <input value="Добавить инвест идею" type="submit" class="form-control input-md" style="background-color: #3F72AF; color: white">
+            </div>
+
+        }
     </div>
 </div>
 
