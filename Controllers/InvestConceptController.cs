@@ -39,7 +39,7 @@ namespace BFme.Controllers
                     return RedirectToAction("Index", "Home", new { Page = 1, Message = "Попытка добавить инвест идею в несуществующий лот" });
                 }
 
-                InvestConcept.Id = db.InvestConcepts.Count() + 1;
+                InvestConcept.Id = db.InvestConcepts.Max(e => e.Id) + 1; ;
                 db.InvestConcepts.Add(InvestConcept);
                 await db.SaveChangesAsync();
 
@@ -68,10 +68,17 @@ namespace BFme.Controllers
             }
         }
 
-        public async Task<JsonResult> AddExpense(Expense exp)
+        [HttpPost]
+        public async Task<JsonResult> AddExpense(Expense Expense)//int InvestConceptId, string Name, float SinglePayment, float MonthlyPayment
         {
             try
             {
+                /*
+                Expense Expense = new Expense();
+                Expense.InvestConceptId = InvestConceptId;
+                Expense.Name = Name;
+                Expense.SinglePayment = SinglePayment;
+                Expense.MonthlyPayment = MonthlyPayment;
                 /*
                 InvestConcept dbexp = db.InvestConcepts.SingleOrDefault(i => i.Id == exp.Id);
                 if (dbexp != null)
@@ -87,8 +94,8 @@ namespace BFme.Controllers
                     return Index(1, "Попытка добавить расход в несуществующую инвест идею");
                 }
                 */
-                exp.Id = db.Expenses.Count() + 1;
-                db.Expenses.Add(exp);
+                Expense.Id = db.Expenses.Max(e => e.Id) + 1;
+                db.Expenses.Add(Expense);
                 await db.SaveChangesAsync();
 
                 return Json(true);
@@ -97,17 +104,44 @@ namespace BFme.Controllers
             {
                 return Json(false);
             }
+
+            //return Json(result);
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = "agent")]
+        public JsonResult GetExpenses(int Id)
+        {
+            List<Expense> exps = db.Expenses.Where(e => e.InvestConceptId == Id).ToList();
+            return Json(exps);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Remove(int Id)//int InvestConceptId, string Name, float SinglePayment, float MonthlyPayment
+        {
+            try
+            {
+                InvestConcept dbic = db.InvestConcepts.SingleOrDefault(i => i.Id == Id);
+                if (dbic == null)
+                {
+                    //"Попытка удалить несуществующую инвест идею";
+                    return Json(false);
+                }
+
+                db.InvestConcepts.Remove(dbic);
+                await db.SaveChangesAsync();
+
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
         }
 
         #region kal
 
-        [HttpPost]
-        [Authorize(Roles = "agent")]
-        public JsonResult GetExpensesJson(int Id)
-        {
-            List<Expense> exps = db.Expenses.Where(e => e.InvestConceptId == Id).ToList();
-            return Json("ExpensesList", exps);
-        }
+
         public HtmlString GetExpensesHtml(int Id)
         {
             List<Expense> exps = db.Expenses.Where(e => e.InvestConceptId == Id).ToList();
@@ -174,7 +208,7 @@ namespace BFme.Controllers
                     return RedirectToAction("Index", "Home", new { Page = 1, Message = "Попытка добавить инвест идею в несуществующий лот" });
                 }
 
-                NewInvestConcept.Id = db.InvestConcepts.Count() + 1;
+                NewInvestConcept.Id = db.InvestConcepts..Max(e => e.Id) + 1;;
                 db.InvestConcepts.Add(NewInvestConcept);
                 await db.SaveChangesAsync();
 

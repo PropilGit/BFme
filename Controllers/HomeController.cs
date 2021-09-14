@@ -105,7 +105,7 @@ namespace BFme.Controllers
                     return Index(1, "Попытка добавить расход в несуществующую инвест идею");
                 }
 
-                exp.Id = db.Expenses.Count() + 1;
+                exp.Id = db.Expenses.Max(e => e.Id) + 1; ;
                 db.Expenses.Add(exp);
                 await db.SaveChangesAsync();
 
@@ -159,6 +159,26 @@ namespace BFme.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
+
+        #region Test
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return View("Test");
+        }
+
+        public JsonResult GetInfo(Int64 id)
+        {
+            var value = new List<string>();
+            for (long i = 0; i < id; i++)
+            {
+                value.Add("Элемент № " + i.ToString());
+            }
+
+            return Json(value);
+        }
+
         #endregion
     }
 }

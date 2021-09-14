@@ -19,6 +19,11 @@ namespace BFme.Models
 
         public int LotId { get; set; }
 
-        public string Description() => "";
+        public string Description() =>
+            Name + "(" + ImplementationPeriod + " мес.)\n" +
+            "Цена покупки, руб: " + PurchasePrice + "\n" +
+            "Цена продажи, руб: " + SalePrice + "\n" +
+            "Доход, руб: " + (SalePrice - PurchasePrice).ToString() + "\n"
+            ;
     }
 }

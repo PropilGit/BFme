@@ -4,8 +4,6 @@
 
 @model AgentViewModel
 
-@{
-}
 
 <!-- Lot-Agent -->
 <div id="Agent" class="container border rounded" style="background-color: #e9eef5">
@@ -143,10 +141,14 @@
     @foreach (InvestConcept ic in Model.InvestConcepts)
     {
         <!-- InvestConcept -->
-        <div class="container border rounded mt-5" style="background-color: #ffdab9">
+        <div id="InvestConcept_@ic.Id" class="container border rounded mt-5" style="background-color: #ffdab9">
 
             @using (Html.BeginForm("Edit", "InvestConcept", FormMethod.Post))
             {
+                <div class="d-flex flex-row-reverse">
+                    <button onclick="DeleteInvestConcept(@ic.Id)" type="button" class="form-control col-1">X</button>
+                </div>
+                
                 <fieldset>
 
                     <!-- Form Name -->
@@ -163,7 +165,7 @@
                         <div class="col-8">
                             <!-- Name -->
                             <div class="form-group row">
-                                <label class="col-4 control-label" for="Name">Название объекта</label>
+                                <label class="col-4 control-label" for="Name">Название</label>
                                 <div class="col-8">
                                     <input name="Name" type="text" value="@ic.Name" class="form-control input-md">
                                 </div>
@@ -194,7 +196,7 @@
                             </div>
 
                             <!-- Expenses -->
-                            <div id="Expenses_@ic.Id">
+                            <div id="ExpensesTable_@ic.Id">
                                 <table>
                                     <tr>
                                         <td>Категория расхода</td>
@@ -209,23 +211,22 @@
                                             <td>@exp.MonthlyPayment</td>
                                         </tr>
                                     }
-                                    <div id="ExpenseInsert"></div>
-                                    <tr>
-                                        <td>
-                                            <input value="@ic.Id" name="InvestConceptId" id="InvestConceptId" type="hidden" />
-                                            <input value="" name="Name" id="Name" type="text" class="form-control input-md">
-                                            <input value="" name="SinglePayment" id="SinglePayment" type="number" class="form-control input-md">
-                                            <input value="" name="MonthlyPayment" id="MonthlyPayment" type="number" class="form-control input-md">
-                                            <input value="Добавить" name="AddExpense" id="AddExpense" type="submit" onclick="AddExpense" class="form-control input-md">
-                                        </td>
-                                    </tr>
                                 </table>
+                            </div>
+                            <div class="container d-flex pl-0">
+                                <input value="@ic.Id" name="InvestConceptId" id="InvestConceptId_ExpenseForm_@ic.Id" type="hidden" />
+                                <input value="" name="Name" id="Name_ExpenseForm_@ic.Id" type="text" class="form-control input-md col-6" />
+
+                                <input value="" name="SinglePayment" id="SinglePayment_ExpenseForm_@ic.Id" type="number" class="form-control input-md col-2">
+                                <input value="" name="MonthlyPayment" id="MonthlyPayment_ExpenseForm_@ic.Id" type="number" class="form-control input-md col-2">
+
+                                <button value="Добавить" onclick="AddExpense(@ic.Id)" type="button" class="form-control input-md col-2">Добавить</button>
                             </div>
                         </div>
 
                         <div class="col-4">
                             <!-- Информация -->
-                            <textarea value="@ic.SalePrice" name="Info" type="te" class="form-control input-md"></textarea>
+                            <textarea name="Info" type="te" class="form-control input-md h-auto">@ic.Description()</textarea>
                         </div>
 
                     </div>
@@ -259,44 +260,3 @@
             }
         </div>
     </div>
-
-    @section scripts{
-        <script type="text/javascript">
-            function AddExpense() {
-                $.ajax({
-                    type: 'POST',
-                    url: 'InvestConcept/AddExpense',
-                    data: { "Id": $('#InvestConceptId') },
-                    success: function (data) {
-                        if (data == true) {
-                            alert("Сообщение доставлено");
-
-                        }
-                        else {
-                            alert("Внимание! Сообщение не доставлено!");
-                        }
-                    },
-                    error: function () {
-                        alert("Произошел сбой");
-                    }
-                });
-            }
-
-
-        </script>
-    }
-
-
-    <!--
-    $(document).ready(function () {
-                $('#submit').click(function (e) {
-                    e.preventDefault();
-                    var InvestConceptId = encodeURIComponent($('#InvestConceptId').val());
-                    var Name = encodeURIComponent($('#Name').val());
-                    var SinglePayment = encodeURIComponent($('#SinglePayment').val());
-                    var MonthlyPayment = encodeURIComponent($('#MonthlyPayment').val());
-
-                    $('#ExpenseInsert').load('@Url.Action("AddExpense", "InvestConcept")?InvestConceptId=' + InvestConceptId + 'Name=' + Name + 'SinglePayment=' + SinglePayment + 'MonthlyPayment=' + MonthlyPayment)
-                });
-             });
-    -->
