@@ -32,7 +32,7 @@ namespace BFme.Controllers
             this.ftp = ftp;
         }
 
-        [Authorize]
+
         public IActionResult Index(int Page = 1, string Message = "")
         {
             if (Page < 1) Page = 1;
@@ -52,6 +52,16 @@ namespace BFme.Controllers
             ViewBag.Message = Message;
             return View();
         }
+
+        #region Calc
+
+        [HttpGet]
+        public IActionResult Calc()
+        {
+            return View("Calc");
+        }
+
+        #endregion
 
         #region Expense
 

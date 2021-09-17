@@ -1,0 +1,188 @@
+﻿@using BFme.ViewModels;
+@model CalcViewModel;
+
+
+<div class="row p-3 pt-0">
+
+      <!-- Описание -->
+      <div class="container pt-3">
+        <div class="card border-primary">
+
+          <!-- name -->
+          <div class="card-header bg-primary text-light"><h4 id="name">@Model.Name</h4></div>
+          <div class="card-body">
+
+            <!-- auctionPrice -->
+            <div class="row justify-content-sm-start pt-0 pb-3">
+              <div class="col-sm-auto">
+                <h5 class="text-muted">Цена на торгах: </h5>
+              </div>
+              <div class="col-sm-auto">
+                <h5 class="" id="auctionPrice">@Model.AuctionPrice</h5>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <!-- description -->
+              <div class="col-sm-9">
+                <p class="card-text"><small id="description" >@Model.Description</small></p>
+              </div>
+              
+              <!-- Ссылки -->
+              <div class="col-sm-3 text-center">
+                <h6><a href="@Model.LinkEFRSB">ЕФРСБ</a></h6>
+                <h6><a href="@Model.LinkTradingPlatform">Торг. площадка</a></h6>
+                <h6><a href="http://yandex.ru">Файлы</a></h6>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Анализ риелтора -->
+      <div class="container pt-3">
+        <div class="card border-success">
+          <!--div class="card-header bg-success text-light"><h5>Анализ риелтора</h5></div-->
+          <div class="card-body row">
+
+            <!-- лево -->
+            <div class="col-md-6">
+
+              <!-- marketCost -->
+              <div class="row justify-content-sm-start pt-0 pb-3">
+                <div class="col-sm-auto">
+                  <h5 class="text-muted">Рыночная цена: </h5>
+                </div>
+                <div class="col-sm-auto">
+                  <h5 class="" id="marketCost">@Model.MarketCost</h5>
+                </div>
+              </div>
+
+              <!-- review -->
+              <h5 class="pl-5">Описание</h5>
+              <p class="card-text"><small id="review" >@Model.Review</small></p>
+            </div>
+
+            <!-- право -->
+            <div class="col-md-6">
+
+              <!-- predict -->
+              <h5 class="pl-5 pt-2">Прогноз продажи</h5>
+              <p class="card-text"><small id="predict" >@Model.Review</small></p>
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- Расходы -->
+      <div class="container pt-3">
+        <div class="card border-warning">
+          <!--div class="card-header bg-danger text-light"><h5>Расходы</h5></div-->
+          <div class="card-body">
+            <table class="table table-hover">
+              <thead class="">
+                <tr class="table-warning text-center">
+                  <th scope="col" class="col-md-3">Описание</th>
+                  <th scope="col" class="col-md-3">Инвест идея #1</th>
+                  <th scope="col" class="col-md-3">Инвест идея #2</th>
+                  <th scope="col" class="col-md-3">Инвест идея #3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Срок реализации / periodRow -->
+                <tr class="text-center">
+                  <td><b>Срок реализации (мес)</b></td>
+                  <div id="periodRow">
+                    <td>@Model.InvestConcepts[0].ImplementationPeriod</td>
+                    <td>@Model.InvestConcepts[1].ImplementationPeriod</td>
+                    <td>@Model.InvestConcepts[2].ImplementationPeriod</td>
+                  </div>
+                </tr>
+                <!-- Цена покупки / purchasePriceRow -->
+                <tr class="text-center">
+                  <td><b>Цены покупки</b></td>
+                  <div id="purchasePriceRow">
+                    <td>@Model.InvestConcepts[0].PurchasePrice</td>
+                    <td>@Model.InvestConcepts[1].PurchasePrice</td>
+                    <td>@Model.InvestConcepts[2].PurchasePrice</td>
+                  </div>
+                </tr>
+                <!-- Цена продажи / salePriceRow -->
+                <tr class="text-center">
+                  <td><b>Цена продажи</b></td>
+                  <div id="salePriceRow">
+                    <td>@Model.InvestConcepts[0].SalePrice</td>
+                    <td>@Model.InvestConcepts[1].SalePrice</td>
+                    <td>@Model.InvestConcepts[2].SalePrice</td>
+                  </div>
+                </tr>
+                <!-- Доход / income -->
+                <tr class="text-center">
+                  <td><b>Доход</b></td>
+                  <div id="income">
+                    <td>@Model.Income(0)</td>
+                    <td>@Model.Income(1)</td>
+                    <td>@Model.Income(2)</td>
+                  </div>
+                </tr>
+                <!-- Расходы в месяц / monthlyPaymentRow -->
+                <tr class="text-center">
+                  <td><b>Расходы в месяц</b></td>
+                  <div id="monthlyPaymentRow">
+                    <td>@Model.PaymentPerMonth(0)</td>
+                    <td>@Model.PaymentPerMonth(1)</td>
+                    <td>@Model.PaymentPerMonth(2)</td>
+                  </div>
+                </tr>
+                <!-- Расходы в месяц / uniqueExpenses -->
+                <div id="uniqueExpenses">
+                </div>
+                <!--
+                <tr class="text-center">
+                  <td>Расходы в месяц</td>
+                  <div>
+                    <td>20</td>
+                    <td>60</td>
+                    <td>120</td>
+                  </div>
+                </tr>
+                -->
+                <!-- Прибыль / profitRow -->
+                <tr class="text-center">
+                  <td><b>Прибыль</b></td>
+                  <div id="profitRow">
+                    <td>@Model.Profit(0)</td>
+                    <td>@Model.Profit(1)</td>
+                    <td>@Model.Profit(2)</td>
+                  </div>
+                </tr>
+                <!-- Доходность / profitProcRow -->
+                <tr class="text-center ">
+                  <td><b>Доходность</b></td>
+                  <div id="profitProcRow">
+                    <td>@Model.ProfitProc(0)</td>
+                    <td>@Model.ProfitProc(1)</td>
+                    <td>@Model.ProfitProc(2)</td>
+                  </div>
+                </tr>
+                <!-- Годовая доходность / annualProfitRow -->
+                <tr class="text-center">
+                  <td><b>Годовая доходность</b></td>
+                  <div id="annualProfitRow">
+                    <td>@Model.AnnualProfitProc(0)</td>
+                    <td>@Model.AnnualProfitProc(1)</td>
+                    <td>@Model.AnnualProfitProc(2)</td>
+                  </div>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+
+    </div>

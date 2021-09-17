@@ -1,0 +1,311 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<body>
+    <div class="container">
+      <form>
+        <fieldset>
+          
+          <!-- AGENT -->
+          <div class="card border-primary bs-component mt-3">
+            <div class="card-header text-white bg-primary">
+              <h3 class="card-title">Агент</h3>
+            </div>
+            <div class="card-body">
+  
+              <!-- Id -->
+              <input type="hidden" class="form-control-plaintext" id="id" value="">
+  
+              <!-- Name -->
+              <div class="form-group row pt-1">
+                <label for="name" class="form-label text-md-start col-sm-4">Название</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="name" value="">
+                </div>
+              </div>
+  
+              <!-- Description -->
+              <div class="form-group row pt-1">
+                <label for="description" class="form-label text-md-start col-sm-4">Описание</label>
+                <div class="col-sm-8">
+                  <textarea class="form-control" id="description" rows="5"></textarea>
+                </div>
+              </div>
+  
+              <!-- AuctionPrice -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="auctionPrice" class="form-label col-sm-4">Цена на торгах</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" id="auctionPrice" value="">
+                </div>
+              </div>
+  
+              <!-- LinkEFRS -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="linkEFRS" class="form-label col-sm-4">Ссылка на ЕФРСБ</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="linkEFRS" value="">
+                </div>
+              </div>
+  
+              <!-- LinkTradingPlatform -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="linkTradingPlatform" class="form-label col-sm-4">Ссылка на ТП</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="linkTradingPlatform" value="">
+                </div>
+              </div>
+  
+              <!-- LinkFiles -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="linkFile" class="form-label col-sm-4">Ссылка на файлы</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="linkFile" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- RIELTOR -->
+          <div class="card border-primary bs-component mt-3">
+            <div class="card-header text-white bg-info">
+              <h3 class="card-title">Риелтор</h3>
+            </div>
+            <div class="card-body">
+
+              <!-- MarketCost -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="marketCost" class="form-label col-sm-4">Рыночная цена</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" id="marketCost" value="">
+                </div>
+              </div>
+    
+              <!-- Review -->
+              <div class="form-group row align-items-center pt-1">
+                <label for="review" class="form-label col-sm-4">Ссылка на ТП</label>
+                <div class="col-sm-8">
+                  <textarea class="form-control" id="review" rows="5"></textarea>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- INVEST CONCEPTS -->
+          <div class="container row justify-content-around mt-3">
+
+            <!-- INVEST CONCEPT 1 -->
+            <div class="card border-danger bs-component col-md-6">
+              <div class="card-header text-white bg-danger">
+                <h3 class="card-title">Инвест идея #1</h3>
+              </div>
+              <div class="card-body">
+
+                <!-- ic1_Id -->
+                <input type="hidden" class="form-control-plaintext" id="ic1_Id" value="">
+
+                <!-- ic1_Period -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic1_Period" class="form-label col-sm-6">Срок реализации</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="ic1_Period" value="">
+                    <small class="form-text text-muted mb-3">в месяцах</small>
+                  </div>
+                </div>
+      
+                <!-- ic1_PurchasePrice -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic1_PurchasePrice" class="form-label col-sm-6">Цена покупки</label>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control" id="ic1_PurchasePrice" value="">
+                  </div>
+                </div>
+
+                <!-- ic1_SalePrice -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic1_SalePrice" class="form-label col-sm-6">Цена покупки</label>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control" id="ic1_SalePrice" value="">
+                  </div>
+                </div>
+
+                <!-- ic1_Expenses -->
+                <div class="mt-3">
+                  <h5 class="text-warning"><b>Расходы</b></h5>
+                  <table class="table table-hover border-warning col-12">
+                    <thead>
+                      <tr class="table-warning">
+                        <th scope="col">Категория</th>
+                        <th scope="col">Разово</th>
+                        <th scope="col">Ежемесячно</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ic1_nsertExpenses-->
+                      <div id="ic1_Expenses">
+                        <tr>
+                          <th scope="row"></th>
+                          <td></td>
+                          <td></td>
+                          <td><button type="button" class="btn btn-warning btn-close btn-sm" id="ic1_delExpense"></button></td>
+                        </tr>
+                      </div>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- ic1_ExpenseForm -->
+                <div>
+                  <!-- ic1_expName -->
+                  <div class="form-group row align-items-center pt-1">
+                    <!--label for="ic1_expName" class="form-label">Категория</label-->
+                    <div class="">
+                      <input type="text" class="form-control" id="ic1_expName" value="">
+                    </div>
+                  </div>
+
+                    <!-- ic1_expSinglePayment -->
+                  <div class="form-group row align-items-center pt-1">
+                    <label for="ic1_expSinglePayment" class="form-label col-md-5">Разово</label>
+                    <div class="col-md-7">
+                      <input type="number" class="form-control" id="ic1_expSinglePayment" value="">
+                    </div>
+                  </div>
+
+                  <!-- ic1_expMonthly -->
+                  <div class="form-group row align-items-center pt-1">
+                    <label for="ic1_expMonthly" class="form-label col-md-5">Ежемесячно</label>
+                    <div class="col-md-7">
+                      <input type="number" class="form-control" id="ic1_expMonthly" value="">
+                    </div>
+                  </div>
+
+                  <!-- ic1_addExpens -->
+                  <button type="button" class="btn btn-warning pull-right mt-2 col-12" id="ic1_addExpense">Добавить</button>
+
+                </div>
+
+              </div>
+            </div>
+            
+            <!-- INVEST CONCEPT 2 -->
+            <div class="card border-danger bs-component col-md-6">
+              <div class="card-header text-white bg-danger">
+                <h3 class="card-title">Инвест идея #1</h3>
+              </div>
+              <div class="card-body">
+
+                <!-- ic2_Id -->
+                <input type="hidden" class="form-control-plaintext" id="ic2_Id" value="">
+
+                <!-- ic2_Period -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic2_Period" class="form-label col-sm-6">Срок реализации</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="ic2_Period" value="">
+                    <small class="form-text text-muted mb-3">в месяцах</small>
+                  </div>
+                </div>
+
+                <!-- ic2_PurchasePrice -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic2_PurchasePrice" class="form-label col-sm-6">Цена покупки</label>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control" id="ic2_PurchasePrice" value="">
+                  </div>
+                </div>
+
+                <!-- ic2_SalePrice -->
+                <div class="form-group row align-items-center pt-1">
+                  <label for="ic2_SalePrice" class="form-label col-sm-6">Цена покупки</label>
+                  <div class="col-sm-6">
+                    <input type="number" class="form-control" id="ic2_SalePrice" value="">
+                  </div>
+                </div>
+
+                <!-- ic2_Expenses -->
+                <div class="mt-3">
+                  <h5 class="text-warning"><b>Расходы</b></h5>
+                  <table class="table table-hover border-warning col-12">
+                    <thead>
+                      <tr class="table-warning">
+                        <th scope="col">Категория</th>
+                        <th scope="col">Разово</th>
+                        <th scope="col">Ежемесячно</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--ic2_nsertExpenses-->
+                      <div id="ic2_Expenses">
+                        <tr>
+                          <th scope="row"></th>
+                          <td></td>
+                          <td></td>
+                          <td><button type="button" class="btn btn-warning btn-close btn-sm" id="ic2_delExpense"></button></td>
+                        </tr>
+                      </div>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- ic2_ExpenseForm -->
+                <div>
+                  <!-- ic2_expName -->
+                  <div class="form-group row align-items-center pt-1">
+                    <!--label for="ic2_expName" class="form-label">Категория</label-->
+                    <div class="">
+                      <input type="text" class="form-control" id="ic2_expName" value="">
+                    </div>
+                  </div>
+
+                    <!-- ic2_expSinglePayment -->
+                  <div class="form-group row align-items-center pt-1">
+                    <label for="ic2_expSinglePayment" class="form-label col-md-5">Разово</label>
+                    <div class="col-md-7">
+                      <input type="number" class="form-control" id="ic2_expSinglePayment" value="">
+                    </div>
+                  </div>
+
+                  <!-- ic2_expMonthly -->
+                  <div class="form-group row align-items-center pt-1">
+                    <label for="ic2_expMonthly" class="form-label col-md-5">Ежемесячно</label>
+                    <div class="col-md-7">
+                      <input type="number" class="form-control" id="ic2_expMonthly" value="">
+                    </div>
+                  </div>
+
+                  <!-- ic2_addExpens -->
+                  <button type="button" class="btn btn-warning pull-right mt-2 col-12" id="ic2_addExpense">Добавить</button>
+
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <!--  -->
+        </fieldset>
+
+        <!--Submit-->
+        <div class="row justify-content-center pt-3">
+          <button type="button" class="btn btn-primary btn-lg col-sm-8" onclick="Submit()">Сформировать</button>
+        </div>
+      </form>
+    </div>
+
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></!--script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        -->
+    <script src="js/calc.js"></script>
+  </body>
